@@ -23,7 +23,19 @@ export default function Home() {
   const [ stage, setStage ] = useState<number>(0);
 
   const switchStage = (index: number) => {
-    setStage(index);
+    const isYes = 
+      pomodoro !== initialPomodoro
+      || shortBreak !== initialShortBreak
+      || longBreak !== initialLongBreak && stage !== index ? confirm('Are you sure?') : false;
+
+    if (isYes) {
+      reset();
+      setStage(index);
+    } else if (pomodoro === initialPomodoro
+      || shortBreak === initialShortBreak
+      || longBreak === initialLongBreak && stage !== index) {
+      setStage(index);
+    }
   }
 
   const getTickingTime = () => {
@@ -49,6 +61,7 @@ export default function Home() {
     setPomodoro(initialPomodoro);
     setShortBreak(initialShortBreak);
     setLongBreak(initialLongBreak);
+    setSeconds(0);
   }
 
   const clockTicking = () => {

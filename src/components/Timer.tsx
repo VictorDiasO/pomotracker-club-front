@@ -13,8 +13,9 @@ interface ITimer {
 export const Timer = ({ seconds, getTickingTime }: ITimer) => {
   const minutes = getTickingTime();
   return (
-    <h1 className="font-roboto font-thin text-[256px] text-center leading-[85%] w-[95%] md:w-[20%] text-red-900">
-      {minutes.toString().padStart(2, '0')} {seconds.toString().padStart(2, '0')}
+    <h1 className="font-roboto font-thin text-[256px] text-center leading-[85%] text-red-900">
+      {minutes.toString().padStart(2, '0')}<br />
+      {seconds.toString().padStart(2, '0')}
     </h1>
   );
 }
