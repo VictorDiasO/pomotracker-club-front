@@ -1,19 +1,82 @@
 "use client";
+import { Timer } from "@/components/Timer";
+import { timers } from "@/constants";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const { systemTheme, theme, setTheme } = useTheme();
   const currentTheme = theme === 'system' ? systemTheme : theme;
+  const {
+    initialPomodoro,
+    initialShortBreak,
+    initialLongBreak
+  } = timers;
 
   const [ mounted, setMounted ] = useState<boolean>();
-  const [ focusTime, setFocusTime ] = useState();
-  const [ focusTimeProgress, setFocusTimeProgress ] = useState(focusTime);
+  const [ ticking, setTicking ] = useState<boolean>(false);
+
+  const [ pomodoro, setPomodoro ] = useState<number>(25);
+  const [ shortBreak, setShortBreak ] = useState<number>(1);
+  const [ longBreak, setLongBreak ] = useState<number>(10);
+  const [ seconds, setSeconds ] = useState<number>(0);
+  const [ stage, setStage ] = useState<number>(0);
+
+  const switchStage = (index: number) => {
+    setStage(index);
+  }
+
+  const getTickingTime = () => {
+    const timeStage = {
+      0: pomodoro,
+      1: shortBreak,
+      2: longBreak,
+    }
+    return (timeStage as any)[stage];
+  }
+
+  const updateMinutes = () => {
+    const updateStage = {
+      0: setPomodoro,
+      1: setShortBreak,
+      2: setLongBreak,
+    }
+    return (updateStage as any)[stage];
+  }
+
+  const reset = () => {
+    setTicking(false);
+    setPomodoro(initialPomodoro);
+    setShortBreak(initialShortBreak);
+    setLongBreak(initialLongBreak);
+  }
+
+  const clockTicking = () => {
+    const minutes = getTickingTime();
+    const setMinutes = updateMinutes();
+
+    if (minutes === 0 && seconds === 0) {
+      reset();
+    } else if (seconds === 0) {
+      setMinutes((minute: number) => minute - 1);
+      setSeconds(59);
+    } else {
+      setSeconds((second) => second - 1);
+    }
+  }
 
   useEffect(() => {
     setMounted(true);
     setTheme('light');
-  }, []);
+
+    const timer = setInterval(() => {
+      if (ticking) clockTicking();
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [seconds, pomodoro, shortBreak, longBreak, ticking]);
 
   if (!mounted) return null;
 
@@ -33,9 +96,17 @@ export default function Home() {
             </p>
           </div>
           {/* Timer */}
-          <h1 className="font-roboto font-thin text-[256px] text-center leading-[85%] w-[95%] md:w-[20%] text-red-900">
-            25 00
-          </h1>
+          <Timer
+            pomodoro={pomodoro} seconds={seconds}
+            stage={stage}
+            switchStage={switchStage}
+            getTickingTime={getTickingTime}
+            ticking={ticking}
+            setTicking={setTicking}
+          />
+          <button onClick={() => switchStage(0)}>Pomo</button>
+          <button onClick={() => switchStage(1)}>Short</button>
+          <button onClick={() => switchStage(2)}>Long</button>
           {/* Timer Controller */}
           <div className="flex items-center gap-4">
             {/* Settings */}
@@ -44,12 +115,29 @@ export default function Home() {
                 <path d="M19.5 16C19.5 16.6922 19.2947 17.3689 18.9101 17.9445C18.5256 18.5201 17.9789 18.9687 17.3394 19.2336C16.6999 19.4985 15.9961 19.5678 15.3172 19.4327C14.6383 19.2977 14.0146 18.9644 13.5251 18.4749C13.0356 17.9854 12.7023 17.3617 12.5673 16.6828C12.4322 16.0039 12.5015 15.3001 12.7664 14.6606C13.0313 14.0211 13.4799 13.4744 14.0555 13.0899C14.6311 12.7053 15.3078 12.5 16 12.5C16.9272 12.5033 17.8156 12.8731 18.4712 13.5288C19.1269 14.1844 19.4967 15.0728 19.5 16ZM6 12.5C5.30777 12.5 4.63108 12.7053 4.0555 13.0899C3.47993 13.4744 3.03133 14.0211 2.76642 14.6606C2.50151 15.3001 2.4322 16.0039 2.56725 16.6828C2.7023 17.3617 3.03564 17.9854 3.52513 18.4749C4.01461 18.9644 4.63825 19.2977 5.31718 19.4327C5.99612 19.5678 6.69985 19.4985 7.33939 19.2336C7.97893 18.9687 8.52556 18.5201 8.91014 17.9445C9.29473 17.3689 9.5 16.6922 9.5 16C9.49671 15.0728 9.1269 14.1844 8.47123 13.5288C7.81557 12.8731 6.92724 12.5033 6 12.5ZM26 12.5C25.3078 12.5 24.6311 12.7053 24.0555 13.0899C23.4799 13.4744 23.0313 14.0211 22.7664 14.6606C22.5015 15.3001 22.4322 16.0039 22.5673 16.6828C22.7023 17.3617 23.0356 17.9854 23.5251 18.4749C24.0146 18.9644 24.6383 19.2977 25.3172 19.4327C25.9961 19.5678 26.6999 19.4985 27.3394 19.2336C27.9789 18.9687 28.5256 18.5201 28.9101 17.9445C29.2947 17.3689 29.5 16.6922 29.5 16C29.4967 15.0728 29.1269 14.1844 28.4712 13.5288C27.8156 12.8731 26.9272 12.5033 26 12.5Z" fill="#471515"/>
               </svg>
             </button>
-            {/* Play */}
-            <button className="flex px-12 py-8 items-center gap-4 rounded-[32px] bg-red-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <path d="M30 16C29.9992 16.3439 29.9104 16.6818 29.7419 16.9816C29.5734 17.2814 29.3309 17.533 29.0375 17.7125L11.0375 28.7C10.7377 28.89 10.3914 28.9939 10.0365 29.0006C9.68159 29.0072 9.33169 28.9162 9.02499 28.7375C8.71376 28.5667 8.4543 28.3152 8.27392 28.0095C8.09355 27.7037 7.99892 27.355 7.99999 27V4.99996C7.99892 4.64496 8.09355 4.29623 8.27392 3.99047C8.4543 3.68471 8.71376 3.43322 9.02499 3.26246C9.33169 3.08376 9.68159 2.99275 10.0365 2.99936C10.3914 3.00597 10.7377 3.10996 11.0375 3.29996L29.0375 14.2875C29.3309 14.4669 29.5734 14.7185 29.7419 15.0183C29.9104 15.3181 29.9992 15.6561 30 16Z" fill="#471515"/>
-              </svg>
-            </button>
+            {/* Play and Pause */}
+            { ticking
+              ? (
+                <button
+                  onClick={() => setTicking(false)}
+                  className="flex px-12 py-8 items-center gap-4 rounded-[32px] bg-red-400"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M27 6V26C27 26.5304 26.7893 27.0391 26.4142 27.4142C26.0391 27.7893 25.5304 28 25 28H20.5C19.9696 28 19.4609 27.7893 19.0858 27.4142C18.7107 27.0391 18.5 26.5304 18.5 26V6C18.5 5.46957 18.7107 4.96086 19.0858 4.58579C19.4609 4.21071 19.9696 4 20.5 4H25C25.5304 4 26.0391 4.21071 26.4142 4.58579C26.7893 4.96086 27 5.46957 27 6ZM11.5 4H7C6.46957 4 5.96086 4.21071 5.58579 4.58579C5.21071 4.96086 5 5.46957 5 6V26C5 26.5304 5.21071 27.0391 5.58579 27.4142C5.96086 27.7893 6.46957 28 7 28H11.5C12.0304 28 12.5391 27.7893 12.9142 27.4142C13.2893 27.0391 13.5 26.5304 13.5 26V6C13.5 5.46957 13.2893 4.96086 12.9142 4.58579C12.5391 4.21071 12.0304 4 11.5 4Z" fill="#471515"/>
+                  </svg>
+                </button>
+              ) 
+              : (
+                <button
+                  className="flex px-12 py-8 items-center gap-4 rounded-[32px] bg-red-400"
+                  onClick={() => setTicking(true)}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M30 16C29.9992 16.3439 29.9104 16.6818 29.7419 16.9816C29.5734 17.2814 29.3309 17.533 29.0375 17.7125L11.0375 28.7C10.7377 28.89 10.3914 28.9939 10.0365 29.0006C9.68159 29.0072 9.33169 28.9162 9.02499 28.7375C8.71376 28.5667 8.4543 28.3152 8.27392 28.0095C8.09355 27.7037 7.99892 27.355 7.99999 27V4.99996C7.99892 4.64496 8.09355 4.29623 8.27392 3.99047C8.4543 3.68471 8.71376 3.43322 9.02499 3.26246C9.33169 3.08376 9.68159 2.99275 10.0365 2.99936C10.3914 3.00597 10.7377 3.10996 11.0375 3.29996L29.0375 14.2875C29.3309 14.4669 29.5734 14.7185 29.7419 15.0183C29.9104 15.3181 29.9992 15.6561 30 16Z" fill="#471515"/>
+                  </svg>
+                </button>
+              )
+            }
             {/* Skip */}
             <button className="flex p-6 content-center items-center gap-4 rounded-3xl bg-red-100">
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
