@@ -110,12 +110,8 @@ export default function Home() {
           </div>
           {/* Timer */}
           <Timer
-            pomodoro={pomodoro} seconds={seconds}
-            stage={stage}
-            switchStage={switchStage}
+            seconds={seconds}
             getTickingTime={getTickingTime}
-            ticking={ticking}
-            setTicking={setTicking}
           />
           <button onClick={() => switchStage(0)}>Pomo</button>
           <button onClick={() => switchStage(1)}>Short</button>
