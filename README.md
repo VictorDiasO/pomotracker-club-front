@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+WARNING: This project is for study, so im focusing on create and deploy it asap, so Pomotracker-club will evolve by the time and may never be finished because I will always want to add something :D.
+
+Must Have:
+- [ ] Timers
+- [ ] Reset Timer After Start
+- [ ] A list of ideas on what to do in Short Breaks and Long Breaks;
+- [ ] 
+
 ## Getting Started
 
 First, run the development server:

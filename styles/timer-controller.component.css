@@ -1,0 +1,36 @@
+[class='light'] {
+  background: theme('colors.red.50');
+}
+
+[class='light'] p {
+  color: #471515;
+}
+
+[class='light'] h1 {
+  color: theme('colors.red.900')
+}
+
+[class='lightshortbreak'] {
+  background: theme('colors.green.50');
+}
+
+[class='lightshortbreak'] p {
+  color: #14401D;
+}
+
+[class='lightshortbreak'] h1 {
+  color: theme('colors.green.900');
+}
+
+[class='lightlongbreak'] {
+  background: theme('colors.blue.50');
+}
+
+[class='lightlongbreak'] p {
+  color: #153047;
+}
+
+[class='lightlongbreak'] h1 {
+  color: theme('colors.blue.900');
+}
+

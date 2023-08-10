@@ -1,0 +1,12 @@
+[class='light'] button {
+  color: theme('colors.red.900')
+}
+
+[class='lightshortbreak'] button {
+  color: theme('colors.green.900');
+}
+
+[class='lightlongbreak'] button {
+  color: theme('colors.blue.900');
+}
+

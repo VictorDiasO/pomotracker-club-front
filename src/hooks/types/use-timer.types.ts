@@ -18,4 +18,9 @@ export interface IUseTimer {
   updateMinutes: () => any;
   reset: () => void;
   clockTicking: () => void;
+  alarmRef: any;
+  isTimeUp: boolean;
+  setIsTimeUp: Dispatch<SetStateAction<boolean>>;
+  muteAlarm: () => void;
+  startTimer: () => void;
 }
