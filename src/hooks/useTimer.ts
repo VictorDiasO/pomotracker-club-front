@@ -4,12 +4,16 @@ import { IUseTimer } from "./types";
 
 export const useTimer = (): IUseTimer => {
   const {
-    initialPomodoro,
-    initialShortBreak,
-    initialLongBreak,
+    // initialPomodoro,
+    // initialShortBreak,
+    // initialLongBreak,
     pomodoroPattern
   } = timers;
   const alarmRef: LegacyRef<HTMLAudioElement> = useRef<any>();
+
+  const [initialPomodoro, setInitialPomodoro] = useState<number>(25);
+  const [initialShortBreak, setInitialShortBreak] = useState<number>(5);
+  const [initialLongBreak, setInitialLongBreak] = useState<number>(10);
 
   const [ ticking, setTicking ] = useState<boolean>(false);
   const [ isTimeUp, setIsTimeUp ] = useState<boolean>(false);
@@ -130,7 +134,17 @@ export const useTimer = (): IUseTimer => {
     console.log(pastStages);
   }, [pastStages, setPastStages]);
 
+  useEffect(() => {
+    console.log(initialPomodoro);
+  }, [initialPomodoro, setInitialPomodoro])
+
   return {
+    initialPomodoro,
+    setInitialPomodoro,
+    initialShortBreak,
+    setInitialShortBreak,
+    initialLongBreak,
+    setInitialLongBreak,
     ticking,
     setTicking,
     pomodoro,

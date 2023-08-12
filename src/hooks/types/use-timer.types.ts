@@ -1,6 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
 
 export interface IUseTimer {
+  initialPomodoro: number;
+  setInitialPomodoro: Dispatch<SetStateAction<number>>;
+  initialShortBreak: number;
+  setInitialShortBreak: Dispatch<SetStateAction<number>>;
+  initialLongBreak: number;
+  setInitialLongBreak: Dispatch<SetStateAction<number>>;
   ticking: boolean;
   setTicking: Dispatch<SetStateAction<boolean>>;
   pomodoro: number;
