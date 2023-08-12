@@ -25,7 +25,8 @@ function Home() {
     switchStage,
     getTickingTime,
     clockTicking,
-    startTimer
+    startTimer,
+    setPomodoro,
    } = useTimer();
 
   const [ mounted, setMounted ] = useState<boolean>();
@@ -109,7 +110,14 @@ function Home() {
             theme={theme}
           />
           {/* Timer Controller */}
-          <TimerController ticking={ticking} startTimer={startTimer} stage={stage} switchStage={switchStage} />
+          <TimerController
+            ticking={ticking}
+            startTimer={startTimer}
+            stage={stage}
+            switchStage={switchStage}
+            pomodoro={pomodoro}
+            setPomodoro={setPomodoro}
+          />
         </div>
       </div>
     </main>

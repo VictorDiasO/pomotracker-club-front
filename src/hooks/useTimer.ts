@@ -136,7 +136,14 @@ export const useTimer = (): IUseTimer => {
 
   useEffect(() => {
     console.log(initialPomodoro);
-  }, [initialPomodoro, setInitialPomodoro])
+  }, [initialPomodoro, setInitialPomodoro]);
+  useEffect(() => {
+    if (pomodoro !== initialPomodoro ||
+      shortBreak !== initialShortBreak ||
+      longBreak !== initialLongBreak) {
+      clockTicking();
+    }
+  }, [initialPomodoro, setInitialPomodoro]);
 
   return {
     initialPomodoro,

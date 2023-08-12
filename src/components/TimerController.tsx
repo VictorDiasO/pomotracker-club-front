@@ -9,9 +9,11 @@ interface ITimerController {
   startTimer: () => void;
   stage: number;
   switchStage: (index: number) => void;
+  pomodoro: number;
+  setPomodoro: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const TimerController = ({ticking, startTimer, stage, switchStage}: ITimerController) => {
+export const TimerController = ({ticking, startTimer, stage, switchStage, pomodoro, setPomodoro}: ITimerController) => {
   const {
     initialPomodoro,
     initialShortBreak,
@@ -72,7 +74,11 @@ export const TimerController = ({ticking, startTimer, stage, switchStage}: ITime
               </div>
               <div className="flex flex-row justify-between">
                 <p>Pomodoro Length (minutes)</p>
-                <InputNumber min={1} defaultValue={initialPomodoro} />
+                <InputNumber
+                  min={1}
+                  defaultValue={pomodoro}
+                  onChange={(e) => setPomodoro(Number(e))}
+                />
               </div>
               <div className="flex flex-row justify-between">
                 <p>Short Break Length (minutes)</p>
