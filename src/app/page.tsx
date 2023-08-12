@@ -27,7 +27,9 @@ function Home() {
     clockTicking,
     startTimer,
     setPomodoro,
-   } = useTimer();
+    setShortBreak,
+    setLongBreak,
+  } = useTimer();
 
   const [ mounted, setMounted ] = useState<boolean>();
 
@@ -117,6 +119,10 @@ function Home() {
             switchStage={switchStage}
             pomodoro={pomodoro}
             setPomodoro={setPomodoro}
+            shortBreak={shortBreak}
+            setShortBreak={setShortBreak}
+            longBreak={longBreak}
+            setLongBreak={setLongBreak}
           />
         </div>
       </div>

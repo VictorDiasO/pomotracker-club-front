@@ -4,23 +4,19 @@ import { IUseTimer } from "./types";
 
 export const useTimer = (): IUseTimer => {
   const {
-    // initialPomodoro,
-    // initialShortBreak,
-    // initialLongBreak,
+    initialPomodoro,
+    initialShortBreak,
+    initialLongBreak,
     pomodoroPattern
   } = timers;
   const alarmRef: LegacyRef<HTMLAudioElement> = useRef<any>();
 
-  const [initialPomodoro, setInitialPomodoro] = useState<number>(25);
-  const [initialShortBreak, setInitialShortBreak] = useState<number>(5);
-  const [initialLongBreak, setInitialLongBreak] = useState<number>(10);
-
   const [ ticking, setTicking ] = useState<boolean>(false);
   const [ isTimeUp, setIsTimeUp ] = useState<boolean>(false);
 
-  const [ pomodoro, setPomodoro ] = useState<number>(initialPomodoro);
-  const [ shortBreak, setShortBreak ] = useState<number>(initialShortBreak);
-  const [ longBreak, setLongBreak ] = useState<number>(initialLongBreak);
+  const [ pomodoro, setPomodoro ] = useState<number>(27);
+  const [ shortBreak, setShortBreak ] = useState<number>(5);
+  const [ longBreak, setLongBreak ] = useState<number>(10);
   const [ seconds, setSeconds ] = useState<number>(0);
   const [ stage, setStage ] = useState<number>(0);
   const [ pastStages, setPastStages] = useState<number[]>([]);
@@ -31,17 +27,17 @@ export const useTimer = (): IUseTimer => {
       setStage(index);
     } else {
       const isYes = 
-      (pomodoro !== initialPomodoro
-      || shortBreak !== initialShortBreak
-      || longBreak !== initialLongBreak) && stage !== index ? confirm('Are you sure?') : false;
+      (pomodoro !== Number(sessionStorage.getItem('pomodoro'))
+      || shortBreak !== Number(sessionStorage.getItem('shortbreak'))
+      || longBreak !== Number(sessionStorage.getItem('longbreak'))) && stage !== index ? confirm('Are you sure?') : false;
 
       if (isYes === true) {
         reset();
         setStage(index);
       } else if (
-        (pomodoro === initialPomodoro
-        && shortBreak === initialShortBreak 
-        && longBreak === initialLongBreak) && stage !== index
+        (pomodoro === Number(sessionStorage.getItem('pomodoro'))
+        && shortBreak === Number(sessionStorage.getItem('shortbreak'))
+        && longBreak === Number(sessionStorage.getItem('longbreak'))) && stage !== index
       ) {
         setStage(index);
       }
@@ -131,27 +127,24 @@ export const useTimer = (): IUseTimer => {
   */
 
   useEffect(() => {
+    if (!sessionStorage.getItem('pomodoro') ||
+    !sessionStorage.getItem('shortbreak') ||
+    !sessionStorage.getItem('longbreak')) {
+      sessionStorage.setItem('pomodoro', '25');
+      sessionStorage.setItem('shortbreak', '5');
+      sessionStorage.setItem('longbreak', '10');
+    }
+
+    setPomodoro(Number(sessionStorage.getItem('pomodoro')));
+    setShortBreak(Number(sessionStorage.getItem('shortbreak')));
+    setLongBreak(Number(sessionStorage.getItem('longbreak')));
+  }, []);
+
+  useEffect(() => {
     console.log(pastStages);
   }, [pastStages, setPastStages]);
 
-  useEffect(() => {
-    console.log(initialPomodoro);
-  }, [initialPomodoro, setInitialPomodoro]);
-  useEffect(() => {
-    if (pomodoro !== initialPomodoro ||
-      shortBreak !== initialShortBreak ||
-      longBreak !== initialLongBreak) {
-      clockTicking();
-    }
-  }, [initialPomodoro, setInitialPomodoro]);
-
   return {
-    initialPomodoro,
-    setInitialPomodoro,
-    initialShortBreak,
-    setInitialShortBreak,
-    initialLongBreak,
-    setInitialLongBreak,
     ticking,
     setTicking,
     pomodoro,
