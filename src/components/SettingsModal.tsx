@@ -1,7 +1,16 @@
 import { SetStateAction } from "react";
-import { InputNumber, Modal, Switch } from "antd";
-import { initialLongBreak, initialShortBreak, pomodoroPattern } from "@/constants/timers";
+import { Form, InputNumber, Modal, Switch } from "antd";
 
+const formItems = {
+  darkTheme: 'darkTheme',
+  pomodoroPattern: 'pomodoroPattern',
+  pomodoro: 'pomodoro',
+  shortBreak: 'shortBreak',
+  longBreak: 'longBreak',
+  sound: 'sound',
+  notifications: 'notifications',
+  autoResume: 'autoResume'
+}
 interface ISettingsModal {
   openSettingsModal: boolean;
   setOpenSettingsModal: (value: SetStateAction<boolean>) => void;
@@ -9,8 +18,8 @@ interface ISettingsModal {
   setPomodoro: React.Dispatch<React.SetStateAction<number>>;
   shortBreak: number;
   setShortBreak: React.Dispatch<React.SetStateAction<number>>;
-  // longBreak: number;
-  // setLongBreak: React.Dispatch<React.SetStateAction<number>>;
+  longBreak: number;
+  setLongBreak: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const SettingsModal = ({
@@ -19,8 +28,23 @@ export const SettingsModal = ({
   pomodoro,
   setPomodoro,
   shortBreak,
-  setShortBreak
+  setShortBreak,
+  longBreak,
+  setLongBreak
 }: ISettingsModal) => {
+  const [ form ] = Form.useForm();
+
+  const handleOk = () => {
+    console.log('Test: ', form.validateFields(), form.isFieldsValidating([formItems.pomodoro]));
+  }
+
+  // useEffect(() => {
+  //   form.setFieldsValue({
+  //     [formItems.pomodoro]: sessionStorage.getItem('pomodoro'),
+  //     [formItems.shortBreak]: sessionStorage.getItem('shortbreak'),
+  //     [formItems.longBreak]: sessionStorage.getItem('longbreak')
+  //   });
+  // }, []);
 
   return (
     <Modal
@@ -36,7 +60,7 @@ export const SettingsModal = ({
           </h1>
         </div>
         {/* Options */}
-        <div className="flex flex-col gap-3">
+        {/* <div className="flex flex-col gap-3">
           <div className="flex flex-row justify-between">
             <p>Dark mode</p>
             <Switch />
@@ -81,7 +105,99 @@ export const SettingsModal = ({
             <p>Notifications</p>
             <Switch />
           </div>
-        </div>
+        </div> */}
+        <Form
+          layout="horizontal"
+          labelCol={{ span: 18 }}
+          wrapperCol={{ span: 14 }}
+          labelAlign="left"
+          style={{ maxWidth: 600 }}
+          form={form}
+          onFinish={handleOk}
+        >
+          <Form.Item
+            label="Dark theme"
+            valuePropName="checked"
+            name={formItems.darkTheme}
+          >
+            <Switch />
+          </Form.Item>
+          <Form.Item
+            label="Pomodoro time (minutes)"
+            name={formItems.pomodoro}
+            rules={[{
+              type: 'number',
+              min: 1,
+              message: 'The input is not a number or is less than 1'
+            }]}
+            initialValue={pomodoro}
+          >
+            <InputNumber
+              defaultValue={pomodoro}
+              onChange={(e) => {
+                setPomodoro(Number(e));
+                sessionStorage.setItem('pomodoro', String(e));
+              }
+            }/>
+          </Form.Item>
+          <Form.Item
+            label="Short Break time (minutes)"
+            name={formItems.shortBreak}
+            rules={[{
+              type: 'number',
+              min: 1,
+              message: 'The input is not a number or is less than 1'
+            }]}
+            initialValue={shortBreak}
+          >
+            <InputNumber
+              defaultValue={shortBreak}
+              onChange={(e) => {
+                setShortBreak(Number(e));
+                sessionStorage.setItem('shortbreak', String(e));
+              }
+            }/>
+          </Form.Item>
+          <Form.Item
+            label="Long Break time (minutes)"
+            name={formItems.longBreak}
+            rules={[{
+              type: 'number',
+              min: 1,
+              message: 'The input is not a number or is less than 1'
+            }]}
+            initialValue={longBreak}
+          >
+            <InputNumber
+              defaultValue={longBreak}
+              onChange={(e) => {
+                setLongBreak(Number(e));
+                sessionStorage.setItem('longbreak', String(e));
+              }
+            }/>
+          </Form.Item>
+          <Form.Item
+            label="Allow Sound"
+            valuePropName="checked"
+            name={formItems.sound}
+          >
+            <Switch />
+          </Form.Item>
+          <Form.Item
+            label="Auto Resume Timer"
+            valuePropName="checked"
+            name={formItems.autoResume}
+          >
+            <Switch />
+          </Form.Item>
+          <Form.Item
+            label="Notifications"
+            valuePropName="checked"
+            name={formItems.notifications}
+          >
+            <Switch />
+          </Form.Item>
+        </Form>
       </div>
     </Modal>
   );

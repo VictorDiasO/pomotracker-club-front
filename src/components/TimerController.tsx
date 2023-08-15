@@ -26,7 +26,9 @@ export const TimerController = ({
   pomodoro,
   setPomodoro,
   shortBreak,
-  setShortBreak
+  setShortBreak,
+  longBreak,
+  setLongBreak
 }: ITimerController) => {
   const {
     initialPomodoro,
@@ -71,6 +73,8 @@ export const TimerController = ({
           setPomodoro={setPomodoro}
           shortBreak={shortBreak}
           setShortBreak={setShortBreak}
+          longBreak={longBreak}
+          setLongBreak={setLongBreak}
         />
       )}
       {/* Play and Pause */}

@@ -127,9 +127,9 @@ export const useTimer = (): IUseTimer => {
   */
 
   useEffect(() => {
-    if (!sessionStorage.getItem('pomodoro') ||
-    !sessionStorage.getItem('shortbreak') ||
-    !sessionStorage.getItem('longbreak')) {
+    if (sessionStorage.getItem('pomodoro') === null ||
+    sessionStorage.getItem('shortbreak') === null ||
+    sessionStorage.getItem('longbreak') === null) {
       sessionStorage.setItem('pomodoro', '25');
       sessionStorage.setItem('shortbreak', '5');
       sessionStorage.setItem('longbreak', '10');
