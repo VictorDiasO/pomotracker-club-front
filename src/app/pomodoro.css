@@ -25,3 +25,14 @@
   color: theme('colors.blue.900');
 }
 
+[class='dark'] {
+  background: #0D0404;
+}
+
+/* [class='dark'] p {
+  color: #FFF2F2;
+} */
+
+[class='dark'] h1 {
+  color: #FFF2F2;
+}

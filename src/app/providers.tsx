@@ -20,7 +20,7 @@ export default function Providers({ children }: { children: React.ReactNode}) {
   if (!mounted) return <>{children}</>;
 
   return (
-    <ThemeProvider attribute="class" themes={['light', 'dark', 'lightshortbreak', 'lightlongbreak']}>
+    <ThemeProvider attribute="class" themes={['light', 'lightshortbreak', 'lightlongbreak', 'dark', 'darkshortbreak', 'darklongbreak']}>
       <TimerContextProvider>
         {children}
       </TimerContextProvider>
