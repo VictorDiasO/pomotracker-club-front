@@ -7,6 +7,7 @@ import { Timer } from "@/components/Timer";
 import { initialLongBreak, initialPomodoro, initialShortBreak } from "@/constants/timers";
 import { useTimer } from "@/hooks";
 import { TimerController } from "@/components/TimerController";
+import { useTimerContext } from "@/contexts/timer";
 
 function Home() {
   const {
@@ -29,7 +30,7 @@ function Home() {
     setPomodoro,
     setShortBreak,
     setLongBreak,
-  } = useTimer();
+  } = useTimerContext();
 
   const [ mounted, setMounted ] = useState<boolean>();
 

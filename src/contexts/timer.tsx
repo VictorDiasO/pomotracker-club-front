@@ -1,15 +1,37 @@
-import { timers } from "@/constants";
-import { LegacyRef, useEffect, useRef, useState } from "react";
-import { IUseTimer } from "./types";
+'use client';
 
-export const useTimer = (): IUseTimer => {
+import { timers } from "@/constants";
+import { SetStateAction, createContext, useContext, useEffect, useState } from "react";
+
+interface TimerContextProps {
+  ticking: boolean;
+  setTicking: React.Dispatch<SetStateAction<boolean>>;
+  isTimeUp: boolean;
+  setIsTimeUp: React.Dispatch<SetStateAction<boolean>>;
+  pomodoro: number;
+  setPomodoro: React.Dispatch<SetStateAction<number>>;
+  shortBreak: number;
+  setShortBreak: React.Dispatch<SetStateAction<number>>;
+  longBreak: number;
+  setLongBreak: React.Dispatch<SetStateAction<number>>;
+  seconds: number;
+  setSeconds: React.Dispatch<SetStateAction<number>>;
+  stage: number;
+  setStage: React.Dispatch<SetStateAction<number>>;
+  pastStages: number[];
+  setPastStages: React.Dispatch<SetStateAction<number[]>>;
+  clockTicking: () => void;
+  startTimer: () => void;
+  switchStage: (index: number, forcePass?: boolean) => void;
+  getTickingTime: () => any;
+}
+
+const TimerContext = createContext({} as TimerContextProps);
+
+export const TimerContextProvider = ({ children }: any) => {
   const {
-    initialPomodoro,
-    initialShortBreak,
-    initialLongBreak,
     pomodoroPattern
   } = timers;
-  const alarmRef: LegacyRef<HTMLAudioElement> = useRef<any>();
 
   const [ ticking, setTicking ] = useState<boolean>(false);
   const [ isTimeUp, setIsTimeUp ] = useState<boolean>(false);
@@ -20,6 +42,14 @@ export const useTimer = (): IUseTimer => {
   const [ seconds, setSeconds ] = useState<number>(0);
   const [ stage, setStage ] = useState<number>(0);
   const [ pastStages, setPastStages] = useState<number[]>([]);
+
+  const reset = () => {
+    setTicking(false);
+    setPomodoro(Number(sessionStorage.getItem('pomodoro')));
+    setShortBreak(Number(sessionStorage.getItem('shortbreak')));
+    setLongBreak(Number(sessionStorage.getItem('longbreak')));
+    setSeconds(0);
+  }
 
   const switchStage = (index: number, forcePass?: boolean) => {
     if (forcePass === true) {
@@ -80,14 +110,6 @@ export const useTimer = (): IUseTimer => {
     }
   }
 
-  const reset = () => {
-    setTicking(false);
-    setPomodoro(Number(sessionStorage.getItem('pomodoro')));
-    setShortBreak(Number(sessionStorage.getItem('shortbreak')));
-    setLongBreak(Number(sessionStorage.getItem('longbreak')));
-    setSeconds(0);
-  }
-
   const clockTicking = () => {
     setIsTimeUp(false);
     const minutes = getTickingTime();
@@ -113,19 +135,6 @@ export const useTimer = (): IUseTimer => {
     setTicking((ticking) => !ticking);
   }
 
-  /* Im just commenting it because I want to find a way to run this useEffect only here and not on the pages that import the useTimer Hook
-  useEffect(() => {
-    console.log('Running');
-    const timer = setInterval(() => {
-      if (ticking) clockTicking();
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [seconds, pomodoro, shortBreak, longBreak, ticking, setTicking, clockTicking]);
-  */
-
   useEffect(() => {
     if (sessionStorage.getItem('pomodoro') === null ||
     sessionStorage.getItem('shortbreak') === null ||
@@ -144,28 +153,32 @@ export const useTimer = (): IUseTimer => {
     console.log(pastStages);
   }, [pastStages, setPastStages]);
 
-  return {
-    ticking,
-    setTicking,
-    pomodoro,
-    setPomodoro,
-    shortBreak,
-    setShortBreak,
-    longBreak,
-    setLongBreak,
-    seconds,
-    setSeconds,
-    stage,
-    setStage,
-    switchStage,
-    getTickingTime,
-    updateMinutes,
-    reset,
-    clockTicking,
-    alarmRef,
-    isTimeUp,
-    setIsTimeUp,
-    muteAlarm,
-    startTimer
-  };
+  return (
+    <TimerContext.Provider value={{
+      ticking,
+      setTicking,
+      isTimeUp,
+      setIsTimeUp,
+      pomodoro,
+      setPomodoro,
+      shortBreak,
+      setShortBreak,
+      longBreak,
+      setLongBreak,
+      seconds,
+      setSeconds,
+      stage,
+      setStage,
+      pastStages,
+      setPastStages,
+      clockTicking,
+      startTimer,
+      switchStage,
+      getTickingTime
+    }}>
+      {children}
+    </TimerContext.Provider>
+  );
 }
+
+export const useTimerContext = () => useContext(TimerContext);

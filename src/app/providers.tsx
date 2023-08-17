@@ -2,6 +2,7 @@
 import { ThemeProvider } from "next-themes";
 import React, { useEffect, useState } from "react";
 import { Roboto } from "next/font/google";
+import { TimerContextProvider } from "@/contexts/timer";
 const roboto = Roboto({
   weight: ['100', '400', '700'],
   style: ['normal', 'italic'],
@@ -18,5 +19,11 @@ export default function Providers({ children }: { children: React.ReactNode}) {
 
   if (!mounted) return <>{children}</>;
 
-  return <ThemeProvider attribute="class" themes={['light', 'dark', 'lightshortbreak', 'lightlongbreak']}>{children}</ThemeProvider>;
+  return (
+    <ThemeProvider attribute="class" themes={['light', 'dark', 'lightshortbreak', 'lightlongbreak']}>
+      <TimerContextProvider>
+        {children}
+      </TimerContextProvider>
+    </ThemeProvider>
+  );
 }

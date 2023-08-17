@@ -1,9 +1,6 @@
-import { timers } from "@/constants";
-import { InputNumber, Modal, Switch } from "antd";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { SettingsModal } from "./SettingsModal";
-// import '../../styles/timer-controller.component.css';
 
 interface ITimerController {
   ticking: boolean;
@@ -30,13 +27,6 @@ export const TimerController = ({
   longBreak,
   setLongBreak
 }: ITimerController) => {
-  const {
-    initialPomodoro,
-    initialShortBreak,
-    initialLongBreak,
-    pomodoroPattern
-  } = timers;
-  
   const {
     theme
   } = useTheme();
