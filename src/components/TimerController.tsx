@@ -48,6 +48,9 @@ export const TimerController = ({
           ${theme === 'light' && 'bg-red-100'}
           ${theme === 'lightshortbreak' && 'bg-green-100'}
           ${theme === 'lightlongbreak' && 'bg-blue-100'}
+          ${theme === 'dark' && 'bg-red-500 bg-opacity-20'}
+          ${theme === 'darkshortbreak' && 'bg-green-100 bg-opacity-10'}
+          ${theme === 'darklongbreak' && 'bg-blue-100 bg-opacity-10'}
         `}
         onClick={() => setOpenSettingsModal(!openSettingsModal)}
       >
@@ -76,6 +79,9 @@ export const TimerController = ({
               ${theme === 'light' && 'bg-red-100'}
               ${theme === 'lightshortbreak' && 'bg-green-100'}
               ${theme === 'lightlongbreak' && 'bg-blue-100'}
+              ${theme === 'dark' && 'bg-red-700'}
+              ${theme === 'darkshortbreak' && 'bg-green-700'}
+              ${theme === 'darklongbreak' && 'bg-blue-700'}
             `}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -89,6 +95,9 @@ export const TimerController = ({
               ${theme === 'light' && 'bg-red-100'}
               ${theme === 'lightshortbreak' && 'bg-green-100'}
               ${theme === 'lightlongbreak' && 'bg-blue-100'}
+              ${theme === 'dark' && 'bg-red-700'}
+              ${theme === 'darkshortbreak' && 'bg-green-700'}
+              ${theme === 'darklongbreak' && 'bg-blue-700'}
             `}
             onClick={startTimer}
           >
@@ -104,6 +113,9 @@ export const TimerController = ({
           ${theme === 'light' && 'bg-red-100'}
           ${theme === 'lightshortbreak' && 'bg-green-100'}
           ${theme === 'lightlongbreak' && 'bg-blue-100'}
+          ${theme === 'dark' && 'bg-red-500 bg-opacity-20'}
+          ${theme === 'darkshortbreak' && 'bg-green-100 bg-opacity-10'}
+          ${theme === 'darklongbreak' && 'bg-blue-100 bg-opacity-10'}
         `}
         onClick={() => switchStage(stage <= 1 ? stage+1 : 0)}
       >

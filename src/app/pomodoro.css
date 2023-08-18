@@ -29,10 +29,22 @@
   background: #0D0404;
 }
 
-/* [class='dark'] p {
-  color: #FFF2F2;
-} */
-
 [class='dark'] h1 {
   color: #FFF2F2;
+}
+
+[class='darkshortbreak'] {
+  background: #040D06;
+}
+
+[class='darkshortbreak'] h1 {
+  color: #F2FFF5;
+}
+
+[class='darklongbreak'] {
+  background: #04090D;
+}
+
+[class='darklongbreak'] h1 {
+  color: #F2F9FF;
 }
