@@ -115,7 +115,6 @@ export const useTimer = (): IUseTimer => {
 
   /* Im just commenting it because I want to find a way to run this useEffect only here and not on the pages that import the useTimer Hook
   useEffect(() => {
-    console.log('Running');
     const timer = setInterval(() => {
       if (ticking) clockTicking();
     }, 1000);
@@ -139,10 +138,6 @@ export const useTimer = (): IUseTimer => {
     setShortBreak(Number(sessionStorage.getItem('shortbreak')));
     setLongBreak(Number(sessionStorage.getItem('longbreak')));
   }, []);
-
-  useEffect(() => {
-    console.log(pastStages);
-  }, [pastStages, setPastStages]);
 
   return {
     ticking,

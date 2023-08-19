@@ -61,8 +61,25 @@ export const SettingsModal = ({
     setLongBreak(Number(longBreak));
     sessionStorage.setItem('longbreak', String(longBreak));
 
-    if (!darkTheme) setTheme('light');
-    if (darkTheme) setTheme('dark');
+    if (!darkTheme) {
+      if (theme?.includes('shortbreak')) {
+        setTheme('lightshortbreak');
+      } else if (theme?.includes('longbreak')) {
+        setTheme('lightlongbreak');
+      } else {
+        setTheme('light');
+      }
+    }
+
+    if (darkTheme) {
+      if (theme?.includes('shortbreak')) {
+        setTheme('darkshortbreak');
+      } else if (theme?.includes('longbreak')) {
+        setTheme('darklongbreak');
+      } else {
+        setTheme('dark');
+      }
+    }
   }
 
   return (

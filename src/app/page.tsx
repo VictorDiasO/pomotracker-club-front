@@ -53,8 +53,6 @@ function Home() {
   }, [seconds, pomodoro, shortBreak, longBreak, ticking, setTheme, clockTicking]);
 
   useEffect(() => {
-    console.log(theme);
-
     if (theme?.includes('light')) {
       if (stage === 0) {
         setTheme('light');

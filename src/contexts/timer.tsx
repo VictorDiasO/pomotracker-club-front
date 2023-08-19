@@ -150,10 +150,6 @@ export const TimerContextProvider = ({ children }: any) => {
     setLongBreak(Number(sessionStorage.getItem('longbreak')));
   }, []);
 
-  useEffect(() => {
-    console.log(pastStages);
-  }, [pastStages, setPastStages]);
-
   return (
     <TimerContext.Provider value={{
       ticking,
