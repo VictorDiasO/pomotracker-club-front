@@ -15,6 +15,7 @@ And I will be going through a hard (and the normal) way at software development,
 
 Must Have:
 - [x] Timers
+- [x] Editing Timers
 - [ ] Have sounds to the beggining and ending of the timers.
 - [ ] Reset The Timer After Start (A button to reset the timer appears only after the timer is started)
 - [ ] A list of ideas on what to do in Short Breaks and Long Breaks;
