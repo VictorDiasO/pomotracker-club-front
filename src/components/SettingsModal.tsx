@@ -80,6 +80,8 @@ export const SettingsModal = ({
         setTheme('dark');
       }
     }
+
+    setOpenSettingsModal(false);
   }
 
   return (
