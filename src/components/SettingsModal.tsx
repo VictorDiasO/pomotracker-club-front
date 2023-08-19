@@ -1,5 +1,7 @@
+'use client';
 import { SetStateAction } from "react";
 import { Form, InputNumber, Modal, Switch } from "antd";
+import { useTheme } from "next-themes";
 
 const formItems = {
   darkTheme: 'darkTheme',
@@ -33,9 +35,34 @@ export const SettingsModal = ({
   setLongBreak
 }: ISettingsModal) => {
   const [ form ] = Form.useForm();
+  const {
+    theme,
+    setTheme
+  } = useTheme();
 
   const handleOk = () => {
-    console.log('Test: ', form.validateFields(), form.isFieldsValidating([formItems.pomodoro]));
+    const {
+      darkTheme,
+      pomodoroPattern,
+      pomodoro,
+      shortBreak,
+      longBreak,
+      sound,
+      notifications,
+      autoResume
+    } = form.getFieldsValue();
+
+    setPomodoro(Number(pomodoro));
+    sessionStorage.setItem('pomodoro', String(pomodoro));
+
+    setShortBreak(Number(shortBreak));
+    sessionStorage.setItem('shortbreak', String(shortBreak));
+
+    setLongBreak(Number(longBreak));
+    sessionStorage.setItem('longbreak', String(longBreak));
+
+    if (!darkTheme) setTheme('light');
+    if (darkTheme) setTheme('dark');
   }
 
   return (
@@ -43,12 +70,13 @@ export const SettingsModal = ({
       open={openSettingsModal}
       onCancel={() => setOpenSettingsModal(false)}
       onOk={() => handleOk()}
+      okText='Save'
     >
       <div className="bg-white p-7">
         <div className="flex flex-row justify-between">
-          <h1 className="font-roboto font-semibold text-2xl mb-7">
+          <h2 className="font-roboto font-semibold text-2xl mb-7">
             Settings
-          </h1>
+          </h2>
         </div>
         <Form
           layout="horizontal"
@@ -63,8 +91,9 @@ export const SettingsModal = ({
             label="Dark theme"
             valuePropName="checked"
             name={formItems.darkTheme}
+            initialValue={theme?.includes('light') ? false : true}
           >
-            <Switch />
+            <Switch checked={theme?.includes('light') ? false : true} />
           </Form.Item>
           <Form.Item
             label="Pomodoro time (minutes)"
@@ -78,15 +107,11 @@ export const SettingsModal = ({
               max: 300,
               message: 'The number you had insert is too large'
             }]}
-            initialValue={pomodoro}
+            initialValue={Number(sessionStorage.getItem('pomodoro'))}
           >
             <InputNumber
               defaultValue={pomodoro}
-              onChange={(e) => {
-                setPomodoro(Number(e));
-                sessionStorage.setItem('pomodoro', String(e));
-              }
-            }/>
+            />
           </Form.Item>
           <Form.Item
             label="Short Break time (minutes)"
@@ -96,15 +121,11 @@ export const SettingsModal = ({
               min: 1,
               message: 'The input is not a number or is less than 1'
             }]}
-            initialValue={shortBreak}
+            initialValue={Number(sessionStorage.getItem('shortbreak'))}
           >
             <InputNumber
               defaultValue={shortBreak}
-              onChange={(e) => {
-                setShortBreak(Number(e));
-                sessionStorage.setItem('shortbreak', String(e));
-              }
-            }/>
+            />
           </Form.Item>
           <Form.Item
             label="Long Break time (minutes)"
@@ -114,15 +135,11 @@ export const SettingsModal = ({
               min: 1,
               message: 'The input is not a number or is less than 1'
             }]}
-            initialValue={longBreak}
+            initialValue={Number(sessionStorage.getItem('longbreak'))}
           >
             <InputNumber
-              defaultValue={longBreak}
-              onChange={(e) => {
-                setLongBreak(Number(e));
-                sessionStorage.setItem('longbreak', String(e));
-              }
-            }/>
+              defaultValue={longBreak}  
+            />
           </Form.Item>
           <Form.Item
             label="Allow Sound"

@@ -155,16 +155,6 @@ function Home() {
           />
           {/* Timer Controller */}
           <TimerController
-            ticking={ticking}
-            startTimer={startTimer}
-            stage={stage}
-            switchStage={switchStage}
-            pomodoro={pomodoro}
-            setPomodoro={setPomodoro}
-            shortBreak={shortBreak}
-            setShortBreak={setShortBreak}
-            longBreak={longBreak}
-            setLongBreak={setLongBreak}
           />
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { SettingsModal } from "./SettingsModal";
+import { useTimerContext } from "@/contexts/timer";
 
 interface ITimerController {
   ticking: boolean;
@@ -15,18 +16,20 @@ interface ITimerController {
   setLongBreak: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const TimerController = ({
-  ticking,
-  startTimer,
-  stage,
-  switchStage,
-  pomodoro,
-  setPomodoro,
-  shortBreak,
-  setShortBreak,
-  longBreak,
-  setLongBreak
-}: ITimerController) => {
+export const TimerController = () => {
+  const {
+    ticking,
+    pomodoro,
+    shortBreak,
+    longBreak,
+    stage,
+    switchStage,
+    startTimer,
+    setPomodoro,
+    setShortBreak,
+    setLongBreak,
+  } = useTimerContext();
+
   const {
     theme
   } = useTheme();

@@ -2,10 +2,6 @@
   background: theme('colors.red.50');
 }
 
-[class='light'] p {
-  color: #471515;
-}
-
 [class='light'] h1 {
   color: theme('colors.red.900')
 }
@@ -47,4 +43,8 @@
 
 [class='darklongbreak'] h1 {
   color: #F2F9FF;
+}
+
+[class='ant-modal-footer'] button {
+  color: #000;
 }

@@ -69,6 +69,7 @@ export const TimerContextProvider = ({ children }: any) => {
         && shortBreak === Number(sessionStorage.getItem('shortbreak'))
         && longBreak === Number(sessionStorage.getItem('longbreak'))) && stage !== index
       ) {
+        reset();
         setStage(index);
       }
     }
