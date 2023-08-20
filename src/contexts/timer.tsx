@@ -1,6 +1,7 @@
 'use client';
 
 import { timers } from "@/constants";
+import { useTheme } from "next-themes";
 import { SetStateAction, createContext, useContext, useEffect, useState } from "react";
 
 interface TimerContextProps {
@@ -32,6 +33,10 @@ export const TimerContextProvider = ({ children }: any) => {
   const {
     pomodoroPattern
   } = timers;
+  const {
+    theme,
+    setTheme,
+  } = useTheme();
 
   const [ ticking, setTicking ] = useState<boolean>(false);
   const [ isTimeUp, setIsTimeUp ] = useState<boolean>(false);
@@ -149,6 +154,36 @@ export const TimerContextProvider = ({ children }: any) => {
     setShortBreak(Number(sessionStorage.getItem('shortbreak')));
     setLongBreak(Number(sessionStorage.getItem('longbreak')));
   }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (ticking) clockTicking();
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [seconds, pomodoro, shortBreak, longBreak, ticking, clockTicking]);
+
+  useEffect(() => {
+    if (theme?.includes('light')) {
+      if (stage === 0) {
+        setTheme('light');
+      } else if (stage === 1) {
+        setTheme('lightshortbreak');
+      } else if (stage === 2) {
+        setTheme('lightlongbreak');
+      }
+    } else {
+      if (stage === 0) {
+        setTheme('dark');
+      } else if (stage === 1) {
+        setTheme('darkshortbreak');
+      } else if (stage === 2) {
+        setTheme('darklongbreak');
+      }
+    }
+  }, [stage, setStage]);
 
   return (
     <TimerContext.Provider value={{

@@ -5,31 +5,18 @@ import './pomodoro.css';
 
 import { Timer } from "@/components/Timer";
 import { initialLongBreak, initialPomodoro, initialShortBreak } from "@/constants/timers";
-import { useTimer } from "@/hooks";
 import { TimerController } from "@/components/TimerController";
 import { useTimerContext } from "@/contexts/timer";
 
 function Home() {
   const {
-    theme,
-    setTheme,
+    theme
   } = useTheme();
 
   const {
-    ticking,
     pomodoro,
     shortBreak,
     longBreak,
-    seconds,
-    stage,
-    setStage,
-    switchStage,
-    getTickingTime,
-    clockTicking,
-    startTimer,
-    setPomodoro,
-    setShortBreak,
-    setLongBreak,
   } = useTimerContext();
 
   const [ mounted, setMounted ] = useState<boolean>();
@@ -41,37 +28,7 @@ function Home() {
         || longBreak !== initialLongBreak ? 'Show warning' : null;
     };
     setMounted(true);
-    // setTheme('dark');
-
-    const timer = setInterval(() => {
-      if (ticking) clockTicking();
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [seconds, pomodoro, shortBreak, longBreak, ticking, setTheme, clockTicking]);
-
-  useEffect(() => {
-    if (theme?.includes('light')) {
-      if (stage === 0) {
-        setTheme('light');
-      } else if (stage === 1) {
-        setTheme('lightshortbreak');
-      } else if (stage === 2) {
-        setTheme('lightlongbreak');
-      }
-    } else {
-      if (stage === 0) {
-        setTheme('dark');
-      } else if (stage === 1) {
-        setTheme('darkshortbreak');
-      } else if (stage === 2) {
-        setTheme('darklongbreak');
-      }
-    }
-
-  }, [stage, setStage]);
+  }, []);
 
   if (!mounted) return null;
 
@@ -142,18 +99,8 @@ function Home() {
               </p>
             </div>
           )}
-          {/* Timer */}
-          <Timer
-            seconds={seconds}
-            getTickingTime={getTickingTime}
-            ticking={ticking}
-            stage={stage}
-            switchStage={switchStage}
-            theme={theme}
-          />
-          {/* Timer Controller */}
-          <TimerController
-          />
+          <Timer />
+          <TimerController />
         </div>
       </div>
     </main>

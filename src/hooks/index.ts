@@ -1,1 +1,1 @@
-export * from './useTimer';
+// I will let this folder here cause I think that I'll need to create a Hook to handle all those Themes.

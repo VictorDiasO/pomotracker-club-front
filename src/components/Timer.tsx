@@ -1,17 +1,23 @@
 import { timers } from "@/constants";
 import '../../styles/timer.component.css';
+import { useTheme } from "next-themes";
+import { useTimerContext } from "@/contexts/timer";
 
-interface ITimer {
-  seconds: number;
-  getTickingTime: () => any;
-  ticking: boolean;
-  stage: number;
-  switchStage: (index: number) => void;
-  theme: string | undefined
-}
-
-export const Timer = ({ seconds, getTickingTime, ticking, stage, switchStage, theme }: ITimer) => {
+export const Timer = () => {
   const { availableTimers } = timers;
+  const {
+    theme
+  } = useTheme();
+
+  const {
+    ticking,
+    seconds,
+    stage,
+    switchStage,
+    getTickingTime,
+  } = useTimerContext();
+
+
   const minutes = getTickingTime();
 
   return (
