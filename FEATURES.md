@@ -1,7 +1,9 @@
 # Features Docs
 
+There is one thing that is more important than every feature or crazy idea that I have here. It all needs
+
 ## Goals Helper
-You can set a Goal of focus for each part of your day, like: If you want to have 3 hours of focus from 9AM to 12PM (midday), you can set this goal and the timer will automatically adjust the Timers for you using math functions. And you can set more than 1 "Goals Helper" to your day.
+You can set a Goal of focus for each part of your day, like: If you want to have 3 hours of focus from 9AM to 12:30PM (midday), you can set this goal and the timer will automatically adjust the Timers for you using math functions. And you can set more than 1 "Goals Helper" to your day.
 And in addition you can enable the website to send Notifications and set the inactivity period that you want the Pomotracker-Club to Warn you of your Goals (The notifications can contain random motivational phrases).
 
 ## Tasks to Focus On
