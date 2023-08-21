@@ -93,6 +93,7 @@ export const SettingsModal = ({
       onCancel={() => setOpenSettingsModal(false)}
       onOk={() => handleOk()}
       okText='Save'
+      className="-mt-[80px] md:-mt-0 lg:-mt-0"
     >
       <div className="bg-white p-7">
         <div className="flex flex-row justify-between">
