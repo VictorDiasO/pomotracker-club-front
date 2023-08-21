@@ -2,7 +2,7 @@
 import { SetStateAction } from "react";
 import { Form, InputNumber, Modal, Switch } from "antd";
 import { useTheme } from "next-themes";
-import { useTimerContext } from "@/contexts/timer";
+import { useTimerContext } from "@/contexts";
 
 const formItems = {
   darkTheme: 'darkTheme',
@@ -30,13 +30,9 @@ export const SettingsModal = ({
   } = useTheme();
 
   const {
-    ticking,
     pomodoro,
     shortBreak,
     longBreak,
-    stage,
-    switchStage,
-    startTimer,
     setPomodoro,
     setShortBreak,
     setLongBreak,
@@ -117,9 +113,9 @@ export const SettingsModal = ({
             label="Dark theme"
             valuePropName="checked"
             name={formItems.darkTheme}
-            initialValue={theme?.includes('light') ? false : true}
+            initialValue={!theme?.includes('light')}
           >
-            <Switch checked={theme?.includes('light') ? false : true} />
+            <Switch checked={!theme?.includes('light')} />
           </Form.Item>
           <Form.Item
             label="Pomodoro time (minutes)"

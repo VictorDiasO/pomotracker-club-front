@@ -6,7 +6,7 @@ import './pomodoro.css';
 import { Timer } from "@/components/Timer";
 import { initialLongBreak, initialPomodoro, initialShortBreak } from "@/constants/timers";
 import { TimerController } from "@/components/TimerController";
-import { useTimerContext } from "@/contexts/timer";
+import { useTimerContext } from "@/contexts";
 
 function Home() {
   const {

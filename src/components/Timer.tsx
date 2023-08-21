@@ -1,7 +1,7 @@
 import { timers } from "@/constants";
 import '../../styles/timer.component.css';
 import { useTheme } from "next-themes";
-import { useTimerContext } from "@/contexts/timer";
+import { useTimerContext } from "@/contexts";
 
 export const Timer = () => {
   const { availableTimers } = timers;

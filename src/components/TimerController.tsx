@@ -1,7 +1,7 @@
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { SettingsModal } from "./SettingsModal";
-import { useTimerContext } from "@/contexts/timer";
+import { useTimerContext } from "@/contexts";
 
 export const TimerController = () => {
   const {
