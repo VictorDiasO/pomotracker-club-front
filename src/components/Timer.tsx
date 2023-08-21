@@ -13,9 +13,7 @@ export const Timer = () => {
 
   return (
     <div>
-      <div className="flex flex-row gap-4">
-        <ToggleTimers />
-      </div>
+      <ToggleTimers />
       <h1
         className={`font-roboto ${ticking ? 'font-black' : 'font-thin'} text-[256px] md:text-[256px] lg:md:text-[256px] text-center leading-[85%] text-red-900 mt-9`}
       >
