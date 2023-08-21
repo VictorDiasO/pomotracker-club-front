@@ -153,6 +153,7 @@ export const TimerContextProvider = ({ children }: any) => {
     setPomodoro(Number(sessionStorage.getItem('pomodoro')));
     setShortBreak(Number(sessionStorage.getItem('shortbreak')));
     setLongBreak(Number(sessionStorage.getItem('longbreak')));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
