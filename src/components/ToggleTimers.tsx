@@ -13,7 +13,7 @@ export const ToggleTimers = () => {
   } = useTimerContext();
   
   return (
-    <div className="flex flex-row gap-5 items-center justify-center">
+    <div className="flex flex-row gap-4 items-center justify-center">
       {availableTimers.map((timer, index) => {
         return (
           <button
