@@ -17,7 +17,7 @@ export const Timer = () => {
         <ToggleTimers />
       </div>
       <h1
-        className={`font-roboto ${ticking ? 'font-black' : 'font-thin'} text-[256px] text-center leading-[85%] text-red-900 mt-9`}
+        className={`font-roboto ${ticking ? 'font-black' : 'font-thin'} text-[256px] md:text-[256px] lg:md:text-[256px] text-center leading-[85%] text-red-900 mt-9`}
       >
         {minutes.toString().padStart(2, '0')}
         <br />

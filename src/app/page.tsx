@@ -37,7 +37,7 @@ function Home() {
       {/* Wrapper */}
       <div className="flex content-center items-center w-full h-full">
         {/* Timer */}
-        <div className="flex flex-col flex-1 p-12 content-center items-center gap-8 self-stretch">
+        <div className="flex flex-col flex-1 py-12 md:p-12 lg:p-12 content-center items-center gap-8 self-stretch">
           {/* Chip */}
           {theme === 'light' && (
             <div className="flex py-2 px-4 border-solid rounded-full border-red-950 bg-red-100 border-2 text-center items-center gap-2">
