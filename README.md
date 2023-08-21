@@ -22,6 +22,7 @@ Must Have:
 - [ ] Reset The Timer After Start (A button to reset the timer appears only after the timer is started)
 - [ ] A list of ideas on what to do in Short Breaks and Long Breaks;
 - [ ] CRUD of Tasks to Focus on
+- [ ] Add Prettier
 
 Would be Nice to have:
 - [ ] Reports of focus and Chill time (plus each task you spend more and less pomodoros in)

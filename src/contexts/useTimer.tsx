@@ -147,6 +147,7 @@ export const TimerContextProvider = ({ children }: any) => {
       sessionStorage.setItem('pomodoro', '25');
       sessionStorage.setItem('shortbreak', '5');
       sessionStorage.setItem('longbreak', '10');
+      setTheme('dark');
     }
 
     setPomodoro(Number(sessionStorage.getItem('pomodoro')));
