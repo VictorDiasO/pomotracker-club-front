@@ -2,6 +2,7 @@
 import { SetStateAction } from "react";
 import { Form, InputNumber, Modal, Switch } from "antd";
 import { useTheme } from "next-themes";
+import { useTimerContext } from "@/contexts/timer";
 
 const formItems = {
   darkTheme: 'darkTheme',
@@ -16,23 +17,11 @@ const formItems = {
 interface ISettingsModal {
   openSettingsModal: boolean;
   setOpenSettingsModal: (value: SetStateAction<boolean>) => void;
-  pomodoro: number;
-  setPomodoro: React.Dispatch<React.SetStateAction<number>>;
-  shortBreak: number;
-  setShortBreak: React.Dispatch<React.SetStateAction<number>>;
-  longBreak: number;
-  setLongBreak: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const SettingsModal = ({
   openSettingsModal,
   setOpenSettingsModal,
-  pomodoro,
-  setPomodoro,
-  shortBreak,
-  setShortBreak,
-  longBreak,
-  setLongBreak
 }: ISettingsModal) => {
   const [ form ] = Form.useForm();
   const {
@@ -40,7 +29,25 @@ export const SettingsModal = ({
     setTheme
   } = useTheme();
 
-  const handleOk = () => {
+  const {
+    ticking,
+    pomodoro,
+    shortBreak,
+    longBreak,
+    stage,
+    switchStage,
+    startTimer,
+    setPomodoro,
+    setShortBreak,
+    setLongBreak,
+  } = useTimerContext();
+
+  const handleOk = async () => {
+    const hasInvalidFields = await form.validateFields()
+      .then(() => false)
+      .catch((errors) => !!errors.errorFields.length);
+    if (hasInvalidFields) return;
+
     const {
       darkTheme,
       pomodoroPattern,

@@ -28,7 +28,7 @@ function Home() {
         || longBreak !== initialLongBreak ? 'Show warning' : null;
     };
     setMounted(true);
-  }, []);
+  }, [pomodoro, shortBreak, longBreak]);
 
   if (!mounted) return null;
 

@@ -3,19 +3,6 @@ import { useState } from "react";
 import { SettingsModal } from "./SettingsModal";
 import { useTimerContext } from "@/contexts/timer";
 
-interface ITimerController {
-  ticking: boolean;
-  startTimer: () => void;
-  stage: number;
-  switchStage: (index: number) => void;
-  pomodoro: number;
-  setPomodoro: React.Dispatch<React.SetStateAction<number>>;
-  shortBreak: number;
-  setShortBreak: React.Dispatch<React.SetStateAction<number>>;
-  longBreak: number;
-  setLongBreak: React.Dispatch<React.SetStateAction<number>>;
-}
-
 export const TimerController = () => {
   const {
     ticking,
@@ -65,12 +52,6 @@ export const TimerController = () => {
         <SettingsModal
           openSettingsModal={openSettingsModal}
           setOpenSettingsModal={setOpenSettingsModal}
-          pomodoro={pomodoro}
-          setPomodoro={setPomodoro}
-          shortBreak={shortBreak}
-          setShortBreak={setShortBreak}
-          longBreak={longBreak}
-          setLongBreak={setLongBreak}
         />
       )}
       {/* Play and Pause */}

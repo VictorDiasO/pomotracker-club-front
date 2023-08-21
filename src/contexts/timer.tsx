@@ -2,7 +2,7 @@
 
 import { timers } from "@/constants";
 import { useTheme } from "next-themes";
-import { SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import { SetStateAction, createContext, useCallback, useContext, useEffect, useState } from "react";
 
 interface TimerContextProps {
   ticking: boolean;
@@ -56,7 +56,7 @@ export const TimerContextProvider = ({ children }: any) => {
     setSeconds(0);
   }
 
-  const switchStage = (index: number, forcePass?: boolean) => {
+  const switchStage = useCallback((index: number, forcePass?: boolean) => {
     if (forcePass === true) {
       reset();
       setStage(index);
@@ -72,33 +72,32 @@ export const TimerContextProvider = ({ children }: any) => {
       } else if (
         (pomodoro === Number(sessionStorage.getItem('pomodoro'))
         && shortBreak === Number(sessionStorage.getItem('shortbreak'))
-        && longBreak === Number(sessionStorage.getItem('longbreak'))) && stage !== index
+        && longBreak === Number(sessionStorage.getItem('longbreak'))) && seconds === 0 && stage !== index
       ) {
-        reset();
         setStage(index);
       }
     }
-  }
+  }, [longBreak, pomodoro, seconds, shortBreak, stage]);
 
-  const getTickingTime = () => {
+  const getTickingTime = useCallback(() => {
     const timeStage = {
       0: pomodoro,
       1: shortBreak,
       2: longBreak,
     }
     return (timeStage as any)[stage];
-  }
+  }, [longBreak, pomodoro, shortBreak, stage]);
 
-  const updateMinutes = () => {
+  const updateMinutes = useCallback(() => {
     const updateStage = {
       0: setPomodoro,
       1: setShortBreak,
       2: setLongBreak,
     }
     return (updateStage as any)[stage];
-  }
+  }, [stage]);
 
-  const timeUp = async () => {
+  const timeUp = useCallback(async () => {
     setIsTimeUp(true);
     setPastStages((pastNumbers) => pastNumbers.length > 0 ? [...pastNumbers, stage] : [stage]);
     reset();
@@ -114,9 +113,9 @@ export const TimerContextProvider = ({ children }: any) => {
         setPastStages([]);
       }
     }
-  }
+  }, [pastStages.length, pomodoroPattern, stage, switchStage]);
 
-  const clockTicking = () => {
+  const clockTicking = useCallback(() => {
     setIsTimeUp(false);
     const minutes = getTickingTime();
     const setMinutes = updateMinutes();
@@ -129,7 +128,7 @@ export const TimerContextProvider = ({ children }: any) => {
     } else {
       setSeconds((second) => second - 1);
     }
-  }
+  }, [getTickingTime, seconds, timeUp, updateMinutes]);
 
   const muteAlarm = () => {
     // The Logic to mute the Alarm
@@ -183,7 +182,7 @@ export const TimerContextProvider = ({ children }: any) => {
         setTheme('darklongbreak');
       }
     }
-  }, [stage, setStage]);
+  }, [stage, setStage, theme, setTheme]);
 
   return (
     <TimerContext.Provider value={{
