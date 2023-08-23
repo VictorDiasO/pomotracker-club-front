@@ -2,30 +2,9 @@
 
 import { timers } from "@/constants";
 import { useTheme } from "next-themes";
-import { SetStateAction, createContext, useCallback, useContext, useEffect, useState } from "react";
-
-interface TimerContextProps {
-  ticking: boolean;
-  setTicking: React.Dispatch<SetStateAction<boolean>>;
-  isTimeUp: boolean;
-  setIsTimeUp: React.Dispatch<SetStateAction<boolean>>;
-  pomodoro: number;
-  setPomodoro: React.Dispatch<SetStateAction<number>>;
-  shortBreak: number;
-  setShortBreak: React.Dispatch<SetStateAction<number>>;
-  longBreak: number;
-  setLongBreak: React.Dispatch<SetStateAction<number>>;
-  seconds: number;
-  setSeconds: React.Dispatch<SetStateAction<number>>;
-  stage: number;
-  setStage: React.Dispatch<SetStateAction<number>>;
-  pastStages: number[];
-  setPastStages: React.Dispatch<SetStateAction<number[]>>;
-  clockTicking: () => void;
-  startTimer: () => void;
-  switchStage: (index: number, forcePass?: boolean) => void;
-  getTickingTime: () => any;
-}
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { TimerContextProps } from "./types";
+import { getCookie, setCookie } from "cookies-next";
 
 const TimerContext = createContext({} as TimerContextProps);
 
@@ -141,13 +120,21 @@ export const TimerContextProvider = ({ children }: any) => {
   }
 
   useEffect(() => {
-    if (sessionStorage.getItem('pomodoro') === null ||
-    sessionStorage.getItem('shortbreak') === null ||
-    sessionStorage.getItem('longbreak') === null) {
+    if (getCookie('pomodoro') === null ||
+    getCookie('shortbreak') === null ||
+    getCookie('longbreak') === null) {
       sessionStorage.setItem('pomodoro', '25');
       sessionStorage.setItem('shortbreak', '5');
       sessionStorage.setItem('longbreak', '10');
       setTheme('dark');
+      setCookie('pomodoro', 25);
+      setCookie('shortbreak', 5);
+      setCookie('longbreak', 10);
+      setCookie('theme', 'dark');
+    } else {
+      sessionStorage.setItem('pomodoro', String(getCookie('pomodoro')));
+      sessionStorage.setItem('shortbreak', String(getCookie('shortbreak')));
+      sessionStorage.setItem('longbreak', String(getCookie('longbreak')));
     }
 
     setPomodoro(Number(sessionStorage.getItem('pomodoro')));
@@ -170,18 +157,24 @@ export const TimerContextProvider = ({ children }: any) => {
     if (theme?.includes('light')) {
       if (stage === 0) {
         setTheme('light');
+        setCookie('theme', 'light');
       } else if (stage === 1) {
         setTheme('lightshortbreak');
+        setCookie('theme', 'lightshortbreak');
       } else if (stage === 2) {
         setTheme('lightlongbreak');
+        setCookie('theme', 'lightlongbreak');
       }
     } else {
       if (stage === 0) {
         setTheme('dark');
+        setCookie('theme', 'dark');
       } else if (stage === 1) {
         setTheme('darkshortbreak');
+        setCookie('theme', 'darkshortbreak');
       } else if (stage === 2) {
         setTheme('darklongbreak');
+        setCookie('theme', 'darklongbreak');
       }
     }
   }, [stage, setStage, theme, setTheme]);

@@ -3,6 +3,7 @@ import { SetStateAction } from "react";
 import { Form, InputNumber, Modal, Switch } from "antd";
 import { useTheme } from "next-themes";
 import { useTimerContext } from "@/contexts";
+import { setCookie } from "cookies-next";
 
 const formItems = {
   darkTheme: 'darkTheme',
@@ -57,20 +58,26 @@ export const SettingsModal = ({
 
     setPomodoro(Number(pomodoro));
     sessionStorage.setItem('pomodoro', String(pomodoro));
+    setCookie('pomodoro', pomodoro);
 
     setShortBreak(Number(shortBreak));
     sessionStorage.setItem('shortbreak', String(shortBreak));
+    setCookie('shortbreak', shortBreak);
 
     setLongBreak(Number(longBreak));
     sessionStorage.setItem('longbreak', String(longBreak));
+    setCookie('longbreak', longBreak);
 
     if (!darkTheme) {
       if (theme?.includes('shortbreak')) {
         setTheme('lightshortbreak');
+        setCookie('theme', 'lightshortbreak');
       } else if (theme?.includes('longbreak')) {
         setTheme('lightlongbreak');
+        setCookie('theme', 'lightlongbreak');
       } else {
         setTheme('light');
+        setCookie('theme', 'light');
       }
     }
 
