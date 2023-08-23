@@ -3,7 +3,7 @@ import { SetStateAction } from "react";
 import { Form, InputNumber, Modal, Switch } from "antd";
 import { useTheme } from "next-themes";
 import { useTimerContext } from "@/contexts";
-import { setCookie } from "cookies-next";
+import { getCookie, setCookie } from "cookies-next";
 
 const formItems = {
   darkTheme: 'darkTheme',
@@ -58,15 +58,15 @@ export const SettingsModal = ({
 
     setPomodoro(Number(pomodoro));
     sessionStorage.setItem('pomodoro', String(pomodoro));
-    setCookie('pomodoro', pomodoro);
+    setCookie('pomodoro', String(pomodoro));
 
     setShortBreak(Number(shortBreak));
     sessionStorage.setItem('shortbreak', String(shortBreak));
-    setCookie('shortbreak', shortBreak);
+    setCookie('shortbreak', String(shortBreak));
 
     setLongBreak(Number(longBreak));
     sessionStorage.setItem('longbreak', String(longBreak));
-    setCookie('longbreak', longBreak);
+    setCookie('longbreak', String(longBreak));
 
     if (!darkTheme) {
       if (theme?.includes('shortbreak')) {
@@ -137,7 +137,7 @@ export const SettingsModal = ({
               max: 300,
               message: 'The number you had insert is too large'
             }]}
-            initialValue={Number(sessionStorage.getItem('pomodoro'))}
+            initialValue={Number(getCookie('pomodoro'))}
           >
             <InputNumber
               defaultValue={pomodoro}
@@ -151,7 +151,7 @@ export const SettingsModal = ({
               min: 1,
               message: 'The input is not a number or is less than 1'
             }]}
-            initialValue={Number(sessionStorage.getItem('shortbreak'))}
+            initialValue={Number(getCookie('shortbreak'))}
           >
             <InputNumber
               defaultValue={shortBreak}
@@ -165,7 +165,7 @@ export const SettingsModal = ({
               min: 1,
               message: 'The input is not a number or is less than 1'
             }]}
-            initialValue={Number(sessionStorage.getItem('longbreak'))}
+            initialValue={Number(getCookie('longbreak'))}
           >
             <InputNumber
               defaultValue={longBreak}  

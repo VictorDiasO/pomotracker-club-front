@@ -29,9 +29,9 @@ export const TimerContextProvider = ({ children }: any) => {
 
   const reset = () => {
     setTicking(false);
-    setPomodoro(Number(sessionStorage.getItem('pomodoro')));
-    setShortBreak(Number(sessionStorage.getItem('shortbreak')));
-    setLongBreak(Number(sessionStorage.getItem('longbreak')));
+    setPomodoro(Number(getCookie('pomodoro')));
+    setShortBreak(Number(getCookie('shortbreak')));
+    setLongBreak(Number(getCookie('longbreak')));
     setSeconds(0);
   }
 
@@ -41,17 +41,17 @@ export const TimerContextProvider = ({ children }: any) => {
       setStage(index);
     } else {
       const isYes = 
-      (pomodoro !== Number(sessionStorage.getItem('pomodoro'))
-      || shortBreak !== Number(sessionStorage.getItem('shortbreak'))
-      || longBreak !== Number(sessionStorage.getItem('longbreak'))) && stage !== index ? confirm('Are you sure?') : false;
+      (pomodoro !== Number(getCookie('pomodoro'))
+      || shortBreak !== Number(getCookie('shortbreak'))
+      || longBreak !== Number(getCookie('longbreak'))) && stage !== index ? confirm('Are you sure?') : false;
 
       if (isYes === true) {
         reset();
         setStage(index);
       } else if (
-        (pomodoro === Number(sessionStorage.getItem('pomodoro'))
-        && shortBreak === Number(sessionStorage.getItem('shortbreak'))
-        && longBreak === Number(sessionStorage.getItem('longbreak'))) && seconds === 0 && stage !== index
+        (pomodoro === Number(getCookie('pomodoro'))
+        && shortBreak === Number(getCookie('shortbreak'))
+        && longBreak === Number(getCookie('longbreak'))) && seconds === 0 && stage !== index
       ) {
         setStage(index);
       }
@@ -120,26 +120,19 @@ export const TimerContextProvider = ({ children }: any) => {
   }
 
   useEffect(() => {
-    if (getCookie('pomodoro') === null ||
-    getCookie('shortbreak') === null ||
-    getCookie('longbreak') === null) {
-      sessionStorage.setItem('pomodoro', '25');
-      sessionStorage.setItem('shortbreak', '5');
-      sessionStorage.setItem('longbreak', '10');
+    if (getCookie('pomodoro') === undefined ||
+    getCookie('shortbreak') === undefined ||
+    getCookie('longbreak') === undefined) {
       setTheme('dark');
       setCookie('pomodoro', 25);
       setCookie('shortbreak', 5);
       setCookie('longbreak', 10);
       setCookie('theme', 'dark');
-    } else {
-      sessionStorage.setItem('pomodoro', String(getCookie('pomodoro')));
-      sessionStorage.setItem('shortbreak', String(getCookie('shortbreak')));
-      sessionStorage.setItem('longbreak', String(getCookie('longbreak')));
     }
 
-    setPomodoro(Number(sessionStorage.getItem('pomodoro')));
-    setShortBreak(Number(sessionStorage.getItem('shortbreak')));
-    setLongBreak(Number(sessionStorage.getItem('longbreak')));
+    setPomodoro(Number(getCookie('pomodoro')));
+    setShortBreak(Number(getCookie('shortbreak')));
+    setLongBreak(Number(getCookie('longbreak')));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
