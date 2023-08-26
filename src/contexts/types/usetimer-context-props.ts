@@ -21,4 +21,5 @@ export interface TimerContextProps {
   startTimer: () => void;
   switchStage: (index: number, forcePass?: boolean) => void;
   getTickingTime: () => any;
+  resetActualTimer: () => void;
 }

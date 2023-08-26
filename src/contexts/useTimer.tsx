@@ -35,6 +35,11 @@ export const TimerContextProvider = ({ children }: any) => {
     setSeconds(0);
   }
 
+  const resetActualTimer = useCallback(() => {
+    const isYes = confirm('Are you sure you want to reset this timer?');
+    if (isYes) reset();
+  }, []);
+
   const switchStage = useCallback((index: number, forcePass?: boolean) => {
     if (forcePass === true) {
       reset();
@@ -193,7 +198,8 @@ export const TimerContextProvider = ({ children }: any) => {
       clockTicking,
       startTimer,
       switchStage,
-      getTickingTime
+      getTickingTime,
+      resetActualTimer
     }}>
       {children}
     </TimerContext.Provider>

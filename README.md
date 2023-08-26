@@ -19,7 +19,9 @@ Must Have:
 - [x] Editing Timers
 - [x] Persist timers inital values and color theme values even if the user is not logged in yet (Did it using Cookies)
 - [ ] Have sounds to the beggining and ending of the timers.
-- [ ] Reset the timer after start (A button to reset the timer appears only when the timer is running)
+- [x] Reset the timer after start (A button to reset the timer appears only when the timer is running)
+- [x] Select an Icon Lib
+- [ ] Handle a situation where the timer is running and the user update the values on the Settings
 - [ ] A list of ideas on what to do in Short Breaks and Long Breaks;
 - [ ] CRUD of Tasks to Focus on
 - [ ] Add Prettier
