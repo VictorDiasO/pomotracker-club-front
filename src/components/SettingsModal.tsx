@@ -102,7 +102,7 @@ export const SettingsModal = ({
       okText='Save'
       className="-mt-[80px] md:-mt-0 lg:-mt-0"
     >
-      <div className="bg-white p-7">
+      <div className="p-7">
         <div className="flex flex-row justify-between">
           <h2 className="font-roboto font-semibold text-2xl mb-7">
             Settings

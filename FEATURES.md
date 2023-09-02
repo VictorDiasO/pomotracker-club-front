@@ -12,7 +12,7 @@ It's basically a CRUD, and to create a new task you just need to fill this field
 - Task Description (If you need)
 - Select a Color to this task
 - (Only if you know how much time you want to focus on) Set the quantity of pomodoro timers need to finish this task.
-
+- There could be a Drag and Drop system where you can drag and drop the tasks and put the next one above the others and it will starts automatically after ends you actual task Pomo quotas.
 Then I want to create a sub-tasks system, sometimes we need to develop some feature but there are a lot of other "sub-features" that we need to focus on, so I want the possibility to create and manage sub-tasks.
 
 ### Sub-tasks

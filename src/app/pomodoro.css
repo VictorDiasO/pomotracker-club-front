@@ -45,6 +45,16 @@
   color: #F2F9FF;
 }
 
+[class='darklongbreak'] h4 {
+color: #FFF2F2;
+}
+
 [class='ant-modal-footer'] button {
   color: #000;
+}
+
+
+.ant-modal .ant-modal-content {
+  /* --tw-bg-opacity: 1;
+  background-color: rgb(100 116 139 / var(--tw-bg-opacity))*/
 }

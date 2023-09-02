@@ -7,7 +7,6 @@ import { Timer } from "@/components/Timer";
 import { initialLongBreak, initialPomodoro, initialShortBreak } from "@/constants/timers";
 import { TimerController } from "@/components/TimerController";
 import { useTimerContext } from "@/contexts";
-import { getCookie } from "cookies-next";
 
 function Home() {
   const {
@@ -29,7 +28,6 @@ function Home() {
         || longBreak !== initialLongBreak ? 'Show warning' : null;
     };
     setMounted(true);
-    console.log('Cookies: ', getCookie('pomodoro'), getCookie('shortbreak'), getCookie('theme'))
   }, [pomodoro, shortBreak, longBreak]);
 
   if (!mounted) return null;

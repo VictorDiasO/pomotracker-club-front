@@ -21,7 +21,8 @@ Must Have:
 - [ ] Have sounds to the beggining and ending of the timers.
 - [x] Reset the timer after start (A button to reset the timer appears only when the timer is running)
 - [x] Select an Icon Lib
-- [ ] Handle a situation where the timer is running and the user update the values on the Settings
+- [x] Handle a situation where the timer is running and the user update the values on the Settings
+- Responsible to a very small screen (like 120x867)
 - [ ] A list of ideas on what to do in Short Breaks and Long Breaks;
 - [ ] CRUD of Tasks to Focus on
 - [ ] Add Prettier
