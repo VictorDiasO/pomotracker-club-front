@@ -1,4 +1,5 @@
-import { useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { ArrowCounterClockwise, CaretDoubleRight, ChartBar, DotsThreeOutline, GearSix, Pause, Play } from "@phosphor-icons/react";
 import { useTimerContext } from "@/contexts";
@@ -54,6 +55,22 @@ export const TimerController = () => {
       </button>
     </div>
   );
+
+  useEffect(() => {
+    const handleKeyPress = (e: any) => {
+      if (e.ctrlKey && e.key === 'p') {
+        e.preventDefault()
+        setShowMenuPopover(false)
+        setOpenSettingsModal(!openSettingsModal)
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  })
 
   return (
     <div className="flex items-center gap-4">
