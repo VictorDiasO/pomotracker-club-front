@@ -1,3 +1,5 @@
+/* Light */
+
 [class='light'] {
   background: theme('colors.red.50');
 }
@@ -6,12 +8,16 @@
   color: theme('colors.red.900')
 }
 
+/* Light Short Break */
+
 [class='lightshortbreak'] {
   background: theme('colors.green.50');
 }
 [class='lightshortbreak'] h1 {
   color: theme('colors.green.900');
 }
+
+/* Light Long Break */
 
 [class='lightlongbreak'] {
   background: theme('colors.blue.50');
@@ -21,6 +27,8 @@
   color: theme('colors.blue.900');
 }
 
+/* Dark */
+
 [class='dark'] {
   background: #0D0404;
 }
@@ -29,6 +37,17 @@
   color: #FFF2F2;
 }
 
+[class='dark'] .ant-modal .ant-modal-content {
+  background-color: #0D0404;
+  color: #FFF2F2;
+}
+
+[class='dark'] .ant-modal label {
+  color: #FFF2F2;
+}
+
+/* Dark Short Break */
+
 [class='darkshortbreak'] {
   background: #040D06;
 }
@@ -36,6 +55,17 @@
 [class='darkshortbreak'] h1 {
   color: #F2FFF5;
 }
+
+[class='darkshortbreak'] .ant-modal .ant-modal-content {
+  background-color: #040D06;
+  color: #F2FFF5;
+}
+
+[class='darkshortbreak'] .ant-modal label {
+  color: #F2FFF5;
+}
+
+/* Dark Long Break */
 
 [class='darklongbreak'] {
   background: #04090D;
@@ -49,12 +79,22 @@
 color: #FFF2F2;
 }
 
+[class='darklongbreak'] .ant-modal .ant-modal-content {
+  background-color: #04090D;
+  color: #F2F9FF;
+}
+
+[class='darklongbreak'] .ant-modal label {
+  color: #F2F9FF;
+}
+
+
+
+
 [class='ant-modal-footer'] button {
   color: #000;
 }
 
-
 .ant-modal .ant-modal-content {
-  /* --tw-bg-opacity: 1;
-  background-color: rgb(100 116 139 / var(--tw-bg-opacity))*/
+  border-radius: 24px;
 }

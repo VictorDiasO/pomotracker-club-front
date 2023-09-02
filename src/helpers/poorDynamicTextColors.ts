@@ -1,5 +1,5 @@
 
-const secondaryDynamicTextColors = (theme: string | undefined) => {
+const primaryDynamicTextColors = (theme: string | undefined) => {
   return `
     ${theme === 'light' && 'text-red-100'}
     ${theme === 'lightshortbreak' && 'text-green-100'}
@@ -10,4 +10,15 @@ const secondaryDynamicTextColors = (theme: string | undefined) => {
   `;
 }
 
-export { secondaryDynamicTextColors };
+const secondaryDynamicTextColors = (theme: string | undefined) => {
+  return `
+    ${theme === 'light' && 'text-[#471515]'}
+    ${theme === 'lightshortbreak' && 'text-[#14401D]'}
+    ${theme === 'lightlongbreak' && 'text-[#153047)]'}
+    ${theme === 'dark' && 'text-[#FFF2F2]'}
+    ${theme === 'darkshortbreak' && '#F2FFF5'}
+    ${theme === 'darklongbreak' && '#F2F9FF'}
+  `;
+}
+
+export { primaryDynamicTextColors, secondaryDynamicTextColors };

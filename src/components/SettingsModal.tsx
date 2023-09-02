@@ -1,9 +1,10 @@
 'use client';
 import { SetStateAction } from "react";
-import { Form, InputNumber, Modal, Switch } from "antd";
+import { Button, Form, InputNumber, Modal, Switch } from "antd";
 import { useTheme } from "next-themes";
 import { useTimerContext } from "@/contexts";
 import { getCookie, setCookie } from "cookies-next";
+import { dynamicButtonColors, dynamicTextColors } from "@/helpers";
 
 const formItems = {
   darkTheme: 'darkTheme',
@@ -101,6 +102,11 @@ export const SettingsModal = ({
       onOk={() => handleOk()}
       okText='Save'
       className="-mt-[80px] md:-mt-0 lg:-mt-0"
+      maskStyle={{
+        backgroundColor: 'GrayText',
+        opacity: 0.5
+      }}
+      footer={false}
     >
       <div className="p-7">
         <div className="flex flex-row justify-between">
@@ -123,7 +129,7 @@ export const SettingsModal = ({
             name={formItems.darkTheme}
             initialValue={!theme?.includes('light')}
           >
-            <Switch checked={!theme?.includes('light')} />
+            <StyledSwitch checked={!theme?.includes('light')} />
           </Form.Item>
           <Form.Item
             label="Pomodoro time (minutes)"
@@ -176,25 +182,41 @@ export const SettingsModal = ({
             valuePropName="checked"
             name={formItems.sound}
           >
-            <Switch />
+            <StyledSwitch />
           </Form.Item>
           <Form.Item
             label="Auto Resume Timer"
             valuePropName="checked"
             name={formItems.autoResume}
           >
-            <Switch />
+            <StyledSwitch />
           </Form.Item>
           <Form.Item
             label="Notifications"
             valuePropName="checked"
             name={formItems.notifications}
           >
-            <Switch />
+            <StyledSwitch />
           </Form.Item>
+          <div className="flex justify-between mt-5 max-w-[100%]">
+            <div></div>
+            <Button
+              htmlType="submit"
+              type="primary"
+              className="flex bg-blue-400"
+            >
+              OK
+            </Button>
+            <div></div>
+          </div>
         </Form>
       </div>
     </Modal>
   );
 }
 
+const StyledSwitch = ({ ...props }: any) => {
+  return (
+    <Switch className="bg-slate-400" {...props} />
+  );
+}
