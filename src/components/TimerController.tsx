@@ -5,7 +5,7 @@ import { ArrowCounterClockwise, CaretDoubleRight, ChartBar, DotsThreeOutline, Ge
 import { useTimerContext } from "@/contexts";
 import { dynamicButtonColors, dynamicIconColors } from "@/helpers";
 import { SettingsModal } from "./SettingsModal";
-import { Button, Popover } from "antd";
+import { Popover } from "antd";
 
 export const TimerController = () => {
   const {
