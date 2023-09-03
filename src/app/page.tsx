@@ -7,6 +7,7 @@ import { Timer } from "@/components/Timer";
 import { initialLongBreak, initialPomodoro, initialShortBreak } from "@/constants/timers";
 import { TimerController } from "@/components/TimerController";
 import { useTimerContext } from "@/contexts";
+import { TaskContainer } from "@/components/TaskContainer";
 
 function Home() {
   const {
@@ -101,6 +102,7 @@ function Home() {
           )}
           <Timer />
           <TimerController />
+          <TaskContainer />
         </div>
       </div>
     </main>

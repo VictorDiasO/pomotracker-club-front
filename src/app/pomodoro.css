@@ -98,3 +98,9 @@ color: #FFF2F2;
 .ant-modal .ant-modal-content {
   border-radius: 24px;
 }
+
+
+
+[class='dark'] .ant-collapse-header .ant-collapse-header-text {
+  color: #fff;
+}
