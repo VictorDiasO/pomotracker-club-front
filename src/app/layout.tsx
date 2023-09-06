@@ -1,6 +1,6 @@
 import './globals.css'
 import Providers from './providers';
-export { metadata } from '@/constants';
+// export { metadata } from '@/constants';
 
 export default function RootLayout({
   children,

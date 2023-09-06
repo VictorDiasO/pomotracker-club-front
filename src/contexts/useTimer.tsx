@@ -2,9 +2,10 @@
 
 import { timers } from "@/constants";
 import { useTheme } from "next-themes";
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { TimerContextProps } from "./types";
 import { getCookie, setCookie } from "cookies-next";
+import { Audio } from "@/components/Audio";
 
 const TimerContext = createContext({} as TimerContextProps);
 
@@ -26,6 +27,8 @@ export const TimerContextProvider = ({ children }: any) => {
   const [ seconds, setSeconds ] = useState<number>(0);
   const [ stage, setStage ] = useState<number>(0);
   const [ pastStages, setPastStages] = useState<number[]>([]);
+
+  const audioRef = useRef<HTMLAudioElement>();
 
   const reset = () => {
     setTicking(false);
@@ -85,17 +88,13 @@ export const TimerContextProvider = ({ children }: any) => {
     setIsTimeUp(true);
     setPastStages((pastNumbers) => pastNumbers.length > 0 ? [...pastNumbers, stage] : [stage]);
     reset();
+    audioRef.current?.play();
     // I need to change this bunch of if/else statements. And create an algorithm that makes it in a more efficient way.
     if ((stage === 1 || stage === 2) && pastStages.length === 0) {
       switchStage(0, true);
       setPastStages([]);
-    } else {
-      if (pastStages.length < pomodoroPattern.length) {
-        switchStage(pomodoroPattern[pastStages.length], true);
-      } else {
-        switchStage(0, true);
-        setPastStages([]);
-      }
+    } else if (pastStages.length < pomodoroPattern.length) {
+      switchStage(pomodoroPattern[pastStages.length], true);
     }
   }, [pastStages.length, pomodoroPattern, stage, switchStage]);
 
@@ -202,6 +201,7 @@ export const TimerContextProvider = ({ children }: any) => {
       resetActualTimer
     }}>
       {children}
+      <Audio ref={audioRef} />
     </TimerContext.Provider>
   );
 }

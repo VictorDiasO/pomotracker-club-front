@@ -23,7 +23,7 @@ const getThemeComponent = (theme: string, text: string, borderColor: string, bgC
   );
 };
 
-export const CoffeeChip = () => {
+export const DynamicChip = () => {
   let themeComponent = null;
   const {theme} = useTheme();
 

@@ -4,7 +4,6 @@ import { Button, Form, InputNumber, Modal, Switch } from "antd";
 import { useTheme } from "next-themes";
 import { useTimerContext } from "@/contexts";
 import { getCookie, setCookie } from "cookies-next";
-import { dynamicButtonColors, dynamicTextColors } from "@/helpers";
 
 const formItems = {
   darkTheme: 'darkTheme',
