@@ -76,8 +76,8 @@ export const TimerController = () => {
     <div className="flex items-center gap-4">
       <Popover content={content} trigger="click" onOpenChange={(isVisible) => setShowMenuPopover(isVisible)} open={showMenuPopover}>
        <button
-          className={`flex p-6 content-center items-center gap-4 rounded-3xl 
-            ${dynamicButtonColors.secondaryDynamicButtonColors(theme)}
+          className={`
+            flex p-6 content-center items-center gap-4 rounded-3xl ${dynamicButtonColors.secondaryDynamicButtonColors(theme)}
           `}
           aria-label="Button to open settings modal"
         >

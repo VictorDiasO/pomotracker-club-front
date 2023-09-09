@@ -16,7 +16,7 @@ const GetIcon = ({ theme }: { theme: string }) => {
 
 const getThemeComponent = (theme: string, text: string, borderColor: string, bgColor: string, textColor: string) => {
   return (
-    <div className={`flex py-2 px-4 border-solid rounded-full border-${borderColor} ${bgColor} border-2 text-center items-center gap-2`}>
+    <div className={`flex py-2 px-4 border-solid rounded-full ${borderColor} ${bgColor} border-2 text-center items-center gap-2`}>
       <GetIcon theme={theme} />
       <p className={`text-lg font-medium ${textColor}`}>{text}</p>
     </div>
@@ -32,7 +32,7 @@ export const DynamicChip = () => {
       themeComponent = getThemeComponent(
         theme,
         'Focus',
-        'red-950',
+        'border-[#471515]',
         dynamicButtonColors.secondaryDynamicButtonColors(theme),
         dynamicTextColors.secondaryDynamicTextColors(theme)
       );
@@ -41,7 +41,7 @@ export const DynamicChip = () => {
       themeComponent = getThemeComponent(
         theme,
         'Short Break',
-        'green-900',
+        'border-[#14401D]',
         dynamicButtonColors.secondaryDynamicButtonColors(theme),
         dynamicTextColors.secondaryDynamicTextColors(theme)
       );
@@ -50,7 +50,7 @@ export const DynamicChip = () => {
       themeComponent = getThemeComponent(
         theme,
         'Long Break',
-        'blue-900',
+        'border-[#153047]',
         dynamicButtonColors.secondaryDynamicButtonColors(theme),
         dynamicTextColors.secondaryDynamicTextColors(theme)
       );
@@ -59,7 +59,7 @@ export const DynamicChip = () => {
       themeComponent = getThemeComponent(
         theme,
         'Focus',
-        'FFF2F2',
+        'border-[#FFF2F2]',
         dynamicButtonColors.secondaryDynamicButtonColors(theme),
         dynamicTextColors.secondaryDynamicTextColors(theme)
       );
@@ -68,7 +68,7 @@ export const DynamicChip = () => {
       themeComponent = getThemeComponent(
         theme,
         'Short Break',
-        'FFF2F2',
+        'border-[#FFF2F2]',
         dynamicButtonColors.secondaryDynamicButtonColors(theme),
         dynamicTextColors.secondaryDynamicTextColors(theme)
       );
@@ -77,7 +77,7 @@ export const DynamicChip = () => {
       themeComponent = getThemeComponent(
         theme,
         'Long Break',
-        'FFF2F2',
+        'border-[#FFF2F2]',
         dynamicButtonColors.secondaryDynamicButtonColors(theme),
         dynamicTextColors.secondaryDynamicTextColors(theme)
       );

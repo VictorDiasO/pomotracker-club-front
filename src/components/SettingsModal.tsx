@@ -4,6 +4,7 @@ import { Button, Form, InputNumber, Modal, Switch } from "antd";
 import { useTheme } from "next-themes";
 import { useTimerContext } from "@/contexts";
 import { getCookie, setCookie } from "cookies-next";
+import { X } from "@phosphor-icons/react";
 
 const formItems = {
   darkTheme: 'darkTheme',
@@ -105,6 +106,9 @@ export const SettingsModal = ({
         backgroundColor: 'GrayText',
         opacity: 0.5
       }}
+      closeIcon={(
+        <X size={24} color={theme?.includes('light') ? '#000' : '#FFF'} />
+      )}
       footer={false}
     >
       <div className="p-7">
