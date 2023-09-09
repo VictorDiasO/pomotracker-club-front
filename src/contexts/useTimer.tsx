@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { TimerContextProps } from "./types";
 import { getCookie, setCookie } from "cookies-next";
-import { Audio } from "@/components/Audio";
+import { TimeToFocusAudio } from "@/components/Audio";
 
 const TimerContext = createContext({} as TimerContextProps);
 
@@ -201,7 +201,7 @@ export const TimerContextProvider = ({ children }: any) => {
       resetActualTimer
     }}>
       {children}
-      <Audio ref={audioRef} />
+      <TimeToFocusAudio ref={audioRef} />
     </TimerContext.Provider>
   );
 }

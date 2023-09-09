@@ -40,7 +40,7 @@ const secondaryDynamicButtonColors = (theme: string | undefined) => {
       buttonColor = 'bg-blue-100'
       break
     case 'dark':
-      buttonColor = 'bg-red-500 bg-opacity-20'
+      buttonColor = 'bg-red-500 bg-opacity-25'
       break
     case 'darkshortbreak':
       buttonColor = 'bg-green-100 bg-opacity-10'

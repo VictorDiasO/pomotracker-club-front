@@ -1,9 +1,18 @@
 import React from "react";
 
-export const Audio = React.forwardRef(function RunAudio(_, ref: any) {
+export const TimeToFocusAudio = React.forwardRef(function RunAudio(_, ref: any) {
   return (
     <audio ref={ref}>
-      <source src="/assets/audios/alarm.mp3" type="audio/mp3" />
+      <source src="/assets/audios/focus-2.wav" type="audio/wav" />
+      Your browser does not support audio.
+    </audio>
+  );
+})
+
+export const TimeToABreakAudio = React.forwardRef(function RunAudio(_, ref: any) {
+  return (
+    <audio ref={ref}>
+      <source src="/assets/audios/focus-1.wav" type="audio/wav" />
       Your browser does not support audio.
     </audio>
   );
