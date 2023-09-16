@@ -1,6 +1,6 @@
 "use client";
-import { ThemeProvider } from "next-themes";
 import React, { useEffect, useState } from "react";
+import { ThemeProvider } from "next-themes";
 import { TimerContextProvider } from "@/contexts";
 
 export default function Providers({ children }: { children: React.ReactNode}) {

@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { ArrowCounterClockwise, CaretDoubleRight, ChartBar, DotsThreeOutline, GearSix, Pause, Play } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, CaretDoubleRight, ChartBar, CheckFat, DotsThreeOutline, GearSix, Icon, Pause, Play } from "@phosphor-icons/react";
 import { useTimerContext } from "@/contexts";
 import { dynamicButtonColors, dynamicIconColors } from "@/helpers";
 import { SettingsModal } from "./SettingsModal";
@@ -23,36 +23,31 @@ export const TimerController = () => {
   const [ showMenuPopover, setShowMenuPopover ] = useState(false);
   const [ openSettingsModal, setOpenSettingsModal ] = useState(false);
 
+  const contentItem = (title: string, key: string, Icon: Icon, modalToOpen: boolean, setModalToOpen: (value: SetStateAction<boolean>) => void) => (
+    <button
+      className="flex flex-row gap-2 justify-between text-center items-center py-3"
+      onClick={() => {
+        setShowMenuPopover(false);
+        setModalToOpen(!modalToOpen);
+      }}
+    >
+      <Icon size={24} weight="fill" />
+      <p className="text-base font-medium">{title}</p>
+      <p className="ml-6 py-0 px-2 items-center border-2 rounded-[4px] text-xs">
+        Ctrl
+      </p>
+      +
+      <p className="py-0 px-2 items-center border-2 rounded-[4px] text-xs">
+        {key}
+      </p>
+    </button>
+  )
+
   const content = (
     <div className="flex flex-col p-1">
-      <button className="flex flex-row gap-2 justify-between text-center items-center py-3">
-        <ChartBar size={24} weight="fill" />
-        <p className="text-base font-medium">Statistics</p>
-        <p className="ml-6 py-0 px-2 items-center border-2 rounded-[4px] text-xs">
-          Ctrl
-        </p>
-        +
-        <p className="py-0 px-2 items-center border-2 rounded-[4px] text-xs">
-          S
-        </p>
-      </button>
-      <button
-        className="flex flex-row gap-2 justify-between text-center items-center py-3"
-        onClick={() => {
-          setShowMenuPopover(false);
-          setOpenSettingsModal(!openSettingsModal);
-        }}
-      >
-        <GearSix size={24} weight="fill" />
-        <p className="text-base font-medium">Preferences</p>
-        <p className="ml-6 py-0 px-2 items-center border-2 rounded-[4px] text-xs">
-          Ctrl
-        </p>
-        +
-        <p className="py-0 px-2 items-center border-2 rounded-[4px] text-xs">
-          P
-        </p>
-      </button>
+      {contentItem('Statistics', 'S', ChartBar, false, () => {})}
+      {contentItem('Preferences', 'P', GearSix, openSettingsModal, setOpenSettingsModal)}
+      {contentItem('Tasks', 'T', CheckFat, false, () => {})}
     </div>
   );
 

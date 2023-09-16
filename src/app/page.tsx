@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from "react";
 import './pomodoro.css';
 
-import { Timer } from "@/components/Timer";
-import { initialLongBreak, initialPomodoro, initialShortBreak } from "@/constants/timers";
-import { TimerController } from "@/components/TimerController";
 import { useTimerContext } from "@/contexts";
+import { initialLongBreak, initialPomodoro, initialShortBreak } from "@/constants/timers";
 import { DynamicChip } from "@/components/Chips/DynamicChip";
+import { Timer } from "@/components/Timer";
+import { TimerController } from "@/components/TimerController";
 
 function Home() {
   const {

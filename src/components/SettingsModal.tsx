@@ -27,6 +27,7 @@ export const SettingsModal = ({
   setOpenSettingsModal,
 }: ISettingsModal) => {
   const [ form ] = Form.useForm();
+
   const {
     theme,
     setTheme
