@@ -6,6 +6,11 @@ import { useTimerContext } from "@/contexts";
 import { getCookie, setCookie } from "cookies-next";
 import { X } from "@phosphor-icons/react";
 
+interface ISettingsModal {
+  openSettingsModal: boolean;
+  setOpenSettingsModal: (value: SetStateAction<boolean>) => void;
+}
+
 const formItems = {
   darkTheme: 'darkTheme',
   pomodoroPattern: 'pomodoroPattern',
@@ -15,10 +20,6 @@ const formItems = {
   sound: 'sound',
   notifications: 'notifications',
   autoResume: 'autoResume'
-}
-interface ISettingsModal {
-  openSettingsModal: boolean;
-  setOpenSettingsModal: (value: SetStateAction<boolean>) => void;
 }
 
 export const SettingsModal = ({
@@ -40,35 +41,25 @@ export const SettingsModal = ({
     setLongBreak,
   } = useTimerContext();
 
-  const handleOk = async () => {
-    const hasInvalidFields = await form.validateFields()
-      .then(() => false)
-      .catch((errors) => !!errors.errorFields.length);
-    if (hasInvalidFields) return;
-
-    const {
-      darkTheme,
-      pomodoroPattern,
-      pomodoro,
-      shortBreak,
-      longBreak,
-      sound,
-      notifications,
-      autoResume
-    } = form.getFieldsValue();
-
+  const updatePomodoroTimer = (pomodoro: number) => {
     setPomodoro(Number(pomodoro));
     sessionStorage.setItem('pomodoro', String(pomodoro));
     setCookie('pomodoro', String(pomodoro));
+  }
 
+  const updateShortBreakTimer = (shortBreak: number) => {
     setShortBreak(Number(shortBreak));
     sessionStorage.setItem('shortbreak', String(shortBreak));
     setCookie('shortbreak', String(shortBreak));
+  }
 
+  const updateLongBreakTimer = (longBreak: number) => {
     setLongBreak(Number(longBreak));
     sessionStorage.setItem('longbreak', String(longBreak));
     setCookie('longbreak', String(longBreak));
-
+  }
+  
+  const updateTheme = (darkTheme: boolean, theme: string | undefined) => {
     if (!darkTheme) {
       if (theme?.includes('shortbreak')) {
         setTheme('lightshortbreak');
@@ -91,6 +82,26 @@ export const SettingsModal = ({
         setTheme('dark');
       }
     }
+  }
+
+  const handleSave = async () => {
+    const hasInvalidFields = await form.validateFields()
+      .then(() => false)
+      .catch((errors) => !!errors.errorFields.length);
+    if (hasInvalidFields) return;
+
+    const {
+      darkTheme,
+      pomodoro,
+      shortBreak,
+      longBreak,
+    } = form.getFieldsValue();
+
+    updatePomodoroTimer(pomodoro);
+    updateShortBreakTimer(shortBreak);
+    updateLongBreakTimer(longBreak);
+
+    updateTheme(darkTheme, theme);
 
     setOpenSettingsModal(false);
   }
@@ -99,7 +110,7 @@ export const SettingsModal = ({
     <Modal
       open={openSettingsModal}
       onCancel={() => setOpenSettingsModal(false)}
-      onOk={() => handleOk()}
+      onOk={() => handleSave()}
       okText='Save'
       className="-mt-[80px] md:-mt-0 lg:-mt-0"
       maskStyle={{
@@ -124,7 +135,7 @@ export const SettingsModal = ({
           labelAlign="left"
           style={{ maxWidth: 600 }}
           form={form}
-          onFinish={handleOk}
+          onFinish={handleSave}
         >
           <Form.Item
             label="Dark theme"
