@@ -6,6 +6,7 @@ import { useTimerContext } from "@/contexts";
 import { dynamicButtonColors, dynamicIconColors } from "@/helpers";
 import { SettingsModal } from "./SettingsModal";
 import { Popover } from "antd";
+import { TasksModal } from "./TasksModal";
 
 export const TimerController = () => {
   const {
@@ -22,6 +23,7 @@ export const TimerController = () => {
 
   const [ showMenuPopover, setShowMenuPopover ] = useState(false);
   const [ openSettingsModal, setOpenSettingsModal ] = useState(false);
+  const [ openTasksModal, setOpenTasksModal ] = useState(false);
 
   const contentItem = (title: string, key: string, Icon: Icon, modalToOpen: boolean, setModalToOpen: (value: SetStateAction<boolean>) => void) => (
     <button
@@ -47,7 +49,7 @@ export const TimerController = () => {
     <div className="flex flex-col p-1">
       {contentItem('Statistics', 'S', ChartBar, false, () => {})}
       {contentItem('Preferences', 'P', GearSix, openSettingsModal, setOpenSettingsModal)}
-      {contentItem('Tasks', 'T', CheckFat, false, () => {})}
+      {contentItem('Manage Tasks', 'M', CheckFat, openTasksModal, setOpenTasksModal)}
     </div>
   );
 
@@ -57,6 +59,11 @@ export const TimerController = () => {
         e.preventDefault()
         setShowMenuPopover(false)
         setOpenSettingsModal(!openSettingsModal)
+      }
+      if (e.ctrlKey && e.key === 'm') {
+        e.preventDefault()
+        setShowMenuPopover(false)
+        setOpenTasksModal(!openTasksModal)
       }
     };
 
@@ -72,7 +79,8 @@ export const TimerController = () => {
       <Popover content={content} trigger="click" onOpenChange={(isVisible) => setShowMenuPopover(isVisible)} open={showMenuPopover}>
        <button
           className={`
-            flex p-6 content-center items-center gap-4 rounded-3xl ${dynamicButtonColors.secondaryDynamicButtonColors(theme)}
+            flex p-6 content-center items-center gap-4 rounded-3xl
+            ${dynamicButtonColors.secondaryDynamicButtonColors(theme)}
           `}
           aria-label="Button to open settings modal"
         >
@@ -83,6 +91,12 @@ export const TimerController = () => {
         <SettingsModal
           openSettingsModal={openSettingsModal}
           setOpenSettingsModal={setOpenSettingsModal}
+        />
+      )}
+      { openTasksModal && (
+        <TasksModal
+          openSettingsModal={openTasksModal}
+          setOpenSettingsModal={setOpenTasksModal}
         />
       )}
       { ticking

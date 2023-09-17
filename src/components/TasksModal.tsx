@@ -37,6 +37,13 @@ export const TasksModal = ({
       )}
       footer={false}
     >
+      <div className="p-7">
+        <div className="flex flex-row justify-between">
+          <h2 className="font-roboto font-semibold text-2xl mb-7">
+            Tasks
+          </h2>
+        </div>
+      </div>
     </Modal>
   );
 }

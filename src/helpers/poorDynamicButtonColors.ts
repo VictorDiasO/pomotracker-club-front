@@ -26,12 +26,12 @@ const primaryDynamicButtonColors = (theme: string | undefined) => {
   return buttonColor;
 }
 
-const secondaryDynamicButtonColors = (theme: string | undefined) => {
+const secondaryDynamicButtonColors = (theme: string) => {
   let buttonColor = '#FFFFFF';
 
   switch (theme) {
     case 'light':
-      buttonColor = 'bg-red-100'
+      buttonColor = 'bg-red-200'
       break
     case 'lightshortbreak':
       buttonColor = 'bg-green-100'
