@@ -18,6 +18,9 @@ Then I want to create a sub-tasks system, sometimes we need to develop some feat
 ### Sub-tasks
 You should be able to attach a sub-task to a task, and you should be able to attach links and additional text too.
 
+### Goals Helper + Tasks
+It would be nice to have something that calculates the time for the pomodoro and breaks when you change to a task that have "Estimated hours" instead of "Estimated pomodoros", so when you have "Estimated hours" it will calculate automatically to make sure that you doesn't work more than 45/50 minutes to do a break and continue from there. This way you dont need to be setting the timer for your desired amount every time, and maybe it would be nice if you could define a different Pomodoro pattern for every task.
+
 
 ## Reports
 The reports will only be available when I create the back-end for this application. But there we will save your data anonymously and you will decide what to do with it. Maybe on the future you can go to settings and click on "Reports with Insights by AI" and we retrieve your data plus some insights by AI on where you need to focus more.

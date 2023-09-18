@@ -26,7 +26,7 @@ const primaryDynamicButtonColors = (theme: string | undefined) => {
   return buttonColor;
 }
 
-const secondaryDynamicButtonColors = (theme: string) => {
+const secondaryDynamicButtonColors = (theme: string | undefined) => {
   let buttonColor = '#FFFFFF';
 
   switch (theme) {
