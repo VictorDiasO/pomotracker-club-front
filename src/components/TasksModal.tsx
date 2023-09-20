@@ -23,6 +23,20 @@ const tasksApiModel = [
     description: "A very huuuge description that I dont even know how I will show it to the user, but okay, it doesn't matter now. But Im really worried about it",
     estimated_pomodoros: 15,
     done_pomodoros: 2
+  },
+  {
+    id: "4",
+    title: "Third task",
+    description: "A very huuuge description that I dont even know how I will show it to the user, but okay, it doesn't matter now. But Im really worried about it",
+    estimated_pomodoros: 15,
+    done_pomodoros: 2
+  },
+  {
+    id: "5",
+    title: "Forth task",
+    description: "A very huuuge description that I dont even know how I will show it to the user, but okay, it doesn't matter now. But Im really worried about it",
+    estimated_pomodoros: 15,
+    done_pomodoros: 2
   }
 ];
 
@@ -34,25 +48,20 @@ export const TasksModal = ({
 
   const [ form ] = Form.useForm();
 
-  const Panel = Collapse.Panel;
-
-  const collapseItems: CollapseProps['items'] = [
-    {
-      key: '1',
-      label: '+ Add Task',
-      children: (
-        <div>
-        </div>
-      ),
-    }
-  ];
-
   const {
     theme,
     setTheme
   } = useTheme();
 
   const handleSave = () => {}
+
+  const items: CollapseProps['items'] = [
+    {
+      key: '1',
+      label: 'This is panel header 2',
+      children: <p>Making it show</p>,
+    }
+  ];
 
   return (
     <Modal
@@ -70,7 +79,7 @@ export const TasksModal = ({
       )}
       footer={false}
     >
-      <div className="p-7">
+      <div className="lg:p-7 p-0">
         <div className="flex flex-row justify-between">
           <h2 className="font-roboto font-semibold text-2xl mb-7">
             Tasks
@@ -91,13 +100,30 @@ export const TasksModal = ({
           )}
           {!openCreationTaskModal && (
             <>
-              {tasksApiModel.map(task => (
-                <div key={task.id}>
-                  <p>{task.title}</p>
-                  <p>{task.description}</p>
-                  <p>{task.estimated_pomodoros}</p>
-                </div>
-              ))}
+              <Collapse items={tasksApiModel.map((task) => {
+                return {
+                  key: task.id,
+                  label: task.title,
+                  children: <div className="flex flex-col gap-2">
+                    <div>
+                      <h3
+                        className="font-bold text-lg"
+                      >
+                        Description:
+                      </h3>
+                      <p>{task.description}</p>
+                    </div>
+                    <div>
+                      <h3
+                        className="font-bold text-lg"
+                      >
+                        Estimated Pomodoros:
+                      </h3>
+                      <p>{task.done_pomodoros}/{task.estimated_pomodoros}</p>
+                    </div>
+                  </div>
+                }
+              })} className="bg-white" />
             </>
           )}
         </div>
