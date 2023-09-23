@@ -1,4 +1,5 @@
 'use client';
+import { dynamicButtonColors } from "@/helpers";
 import { X } from "@phosphor-icons/react";
 import { Button, Collapse, CollapseProps, Form, Input, InputNumber, Modal } from "antd";
 import { useTheme } from "next-themes";
@@ -86,12 +87,16 @@ export const TasksModal = ({
           </h2>
         </div>
         <div>
-          <button
-            className="font-bold"
-            onClick={() => setOpenCreationTaskModal(!openCreationTaskModal)}
-          >
-            + Add Task
-          </button>
+          <div className="flex flex-row justify-between">
+            <div></div>
+            <button
+              className={`font-bold text-lg p-2 w-full mb-3 rounded-2xl ${dynamicButtonColors.secondaryDynamicButtonColors(theme)}`}
+              onClick={() => setOpenCreationTaskModal(!openCreationTaskModal)}
+            >
+              + Add Task
+            </button>
+            <div></div>
+          </div>
           {openCreationTaskModal && (
             <CreateNewTask
               open={openCreationTaskModal}
