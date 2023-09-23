@@ -1,6 +1,6 @@
 'use client';
 import { dynamicButtonColors } from "@/helpers";
-import { X } from "@phosphor-icons/react";
+import { GearSix, PencilSimple, X } from "@phosphor-icons/react";
 import { Button, Collapse, CollapseProps, Form, Input, InputNumber, Modal } from "antd";
 import { useTheme } from "next-themes";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -64,6 +64,24 @@ export const TasksModal = ({
     }
   ];
 
+  const genExtra = () => (
+    <div className="flex flex-row justify-between gap-4">
+      <GearSix size={24}
+        onClick={(event) => {
+          // If you don't want click extra trigger collapse, you can prevent this:
+          // event.stopPropagation();
+          console.log('Settings');
+        }}
+      />
+      <PencilSimple size={24}
+        onClick={() => {
+          console.log('Edit');
+        }}
+      />
+    </div>
+  );
+
+
   return (
     <Modal
       open={openSettingsModal}
@@ -109,6 +127,7 @@ export const TasksModal = ({
                 return {
                   key: task.id,
                   label: task.title,
+                  extra: genExtra(),
                   children: <div className="flex flex-col gap-2">
                     <div>
                       <h3
