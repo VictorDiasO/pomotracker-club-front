@@ -1,9 +1,11 @@
 'use client';
 import { dynamicButtonColors } from "@/helpers";
-import { PencilSimple, X } from "@phosphor-icons/react";
-import { Button, Collapse, Form, Input, InputNumber, Modal } from "antd";
+import { generateRandomId } from "@/services/database/db-helpers";
+import db from "@/services/database/pouchdb";
+import { CheckFat, PencilSimple, Trash, X } from "@phosphor-icons/react";
+import { Button, Collapse, Form, Input, InputNumber, Modal, Switch, notification } from "antd";
 import { useTheme } from "next-themes";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface ITasksModal {
   openSettingsModal: boolean;
@@ -11,71 +13,73 @@ interface ITasksModal {
 }
 
 interface ITask {
-  id: number;
+  _id: string;
+  title: string;
+  description: string;
+  estimatedPomodoros: number;
+  donePomodoros: number;
+  _rev: string;
 }
-
-const tasksApiModel = [
-  {
-    id: 2,
-    title: "First task",
-    description: "A very huuuge description that I dont even know how I will show it to the user, but okay, it doesn't matter now. But Im really worried about it",
-    estimated_pomodoros: 15,
-    done_pomodoros: 2
-  },
-  {
-    id: 3,
-    title: "Second task",
-    description: "A very huuuge description that I dont even know how I will show it to the user, but okay, it doesn't matter now. But Im really worried about it",
-    estimated_pomodoros: 15,
-    done_pomodoros: 2
-  },
-  {
-    id: 4,
-    title: "Third task",
-    description: "A very huuuge description that I dont even know how I will show it to the user, but okay, it doesn't matter now. But Im really worried about it",
-    estimated_pomodoros: 15,
-    done_pomodoros: 2
-  },
-  {
-    id: 5,
-    title: "Forth task",
-    description: "A very huuuge description that I dont even know how I will show it to the user, but okay, it doesn't matter now. But Im really worried about it",
-    estimated_pomodoros: 15,
-    done_pomodoros: 2
-  }
-];
 
 export const TasksModal = ({
   openSettingsModal,
   setOpenSettingsModal
 }: ITasksModal) => {
+  const [allTasks, setAllTasks] = useState<ITask[]>([]);
   const [openCreationTaskModal, setOpenCreationTaskModal] = useState<boolean>(false);
-  const [editTaskModalId, setEditTaskModalId] = useState<number | null>(null);
-
-  const [ form ] = Form.useForm();
+  const [editTaskModalId, setEditTaskModalId] = useState<string | null>(null);
+  const [deleteTaskModalId, setDeleteTaskModalId] = useState<string | null>(null);
 
   const {
     theme
   } = useTheme();
 
-  const handleSave = () => {}
-
-  const genExtra = (taskId: number) => (
-    <PencilSimple size={24}
-      onClick={(event) => {
-        event.stopPropagation();
-        console.log('Edit', taskId);
-        setEditTaskModalId(taskId);
-      }}
-    />
+  const genExtra = (taskId: string) => (
+    <div
+      className="flex flex-row gap-7"
+    >
+      <CheckFat
+        size={24}
+        weight="fill"
+        color="green"
+        className="hover:opacity-60 transition-opacity"
+      />
+      <Trash
+        size={24}
+        color="red"
+        className="hover:opacity-60 transition-opacity"
+        onClick={(event) => {
+          event.stopPropagation();
+          console.log('Delete', taskId);
+          setDeleteTaskModalId(taskId);
+        }}
+      />
+    </div>
   );
 
+  useEffect(() => {
+    db.allDocs({ include_docs: true })
+      .then(result => {
+        const documents = result.rows.map(row => row.doc);
+        if (documents.length >= 1) {
+          documents.sort((a: any, b: any) => {
+            return a.created_at - b.created_at;
+          });
+
+          setAllTasks(documents as ITask[]);
+        } else {
+          console.log('No tasks yet.');
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching documents:', error);
+      });
+  }, [openCreationTaskModal, setOpenCreationTaskModal, editTaskModalId, setEditTaskModalId]);
 
   return (
     <Modal
       open={openSettingsModal}
       onCancel={() => setOpenSettingsModal(false)}
-      onOk={() => handleSave()}
       okText='Save'
       className="-mt-[80px] md:-mt-0 lg:-mt-0"
       maskStyle={{
@@ -90,17 +94,17 @@ export const TasksModal = ({
       <div className="lg:p-7 p-0">
         <div className="flex flex-row justify-between">
           <h2 className="font-roboto font-semibold text-2xl mb-7">
-            Tasks
+            Manage Tasks
           </h2>
         </div>
         <div>
           <div className="flex flex-row justify-between">
             <div></div>
             <button
-              className={`font-bold text-lg p-2 w-full mb-3 rounded-2xl ${dynamicButtonColors.primaryDynamicButtonColors(theme)}`}
+              className={`font-bold text-lg p-2 w-full mb-3 rounded-2xl ${dynamicButtonColors.primaryDynamicButtonColors(theme)} hover:opacity-70 transition-opacity`}
               onClick={() => setOpenCreationTaskModal(!openCreationTaskModal)}
             >
-              {openCreationTaskModal ? 'See Tasks' : '+ Add Task'}
+              {openCreationTaskModal ? 'See Tasks (Go Back)' : '+ Add Task'}
             </button>
             <div></div>
           </div>
@@ -108,37 +112,43 @@ export const TasksModal = ({
             <CreateNewTask
               open={openCreationTaskModal}
               setOpen={setOpenCreationTaskModal}
+              theme={theme}
             />
           )}
-          {editTaskModalId}
+          {deleteTaskModalId && (
+            // It needs to be showing the delete confirmation modal
+            <CreateNewTask
+              open={openCreationTaskModal}
+              setOpen={setOpenCreationTaskModal}
+              theme={theme}
+            />
+          )}
           {!openCreationTaskModal && (
-            <>
-              <Collapse items={tasksApiModel.map((task) => {
-                return {
-                  key: task.id,
-                  label: task.title,
-                  extra: genExtra(task.id),
-                  children: <div className="flex flex-col gap-2">
-                    <div>
-                      <h3
-                        className="font-bold text-lg"
-                      >
-                        Description:
-                      </h3>
-                      <p>{task.description}</p>
-                    </div>
-                    <div>
-                      <h3
-                        className="font-bold text-lg"
-                      >
-                        Estimated Pomodoros:
-                      </h3>
-                      <p>{task.done_pomodoros}/{task.estimated_pomodoros}</p>
-                    </div>
+            <Collapse items={allTasks.map((task) => {
+              return {
+                key: task._id,
+                label: task.title,
+                extra: genExtra(task._id),
+                children: <div className="flex flex-col gap-2">
+                  <div>
+                    <h3
+                      className="font-bold text-lg"
+                    >
+                      Description:
+                    </h3>
+                    <p>{task.description}</p>
                   </div>
-                }
-              })} className="bg-white" />
-            </>
+                  <div>
+                    <h3
+                      className="font-bold text-lg"
+                    >
+                      Estimated Pomodoros:
+                    </h3>
+                    <p>{task.donePomodoros} / {task.estimatedPomodoros}</p>
+                  </div>
+                </div>
+              }
+            })} className="bg-white" />
           )}
         </div>
       </div>
@@ -150,18 +160,53 @@ const formItems = {
   taskTitle: 'taskTitle',
   taskDesc: 'taskDescription',
   estimatedPomos: 'estimatedPomodoros',
-  donePomos: 'donePomodoros'
+  donePomos: 'donePomodoros',
+  inProgress: 'inProgress'
 }
 
 type TCreateNewTask = {
   open: boolean,
-  setOpen: Dispatch<SetStateAction<boolean>>
+  setOpen: Dispatch<SetStateAction<boolean>>,
+  theme: string | undefined,
 }
 
-const CreateNewTask = ({open, setOpen}: TCreateNewTask) => {
+const CreateNewTask = ({open, setOpen, theme}: TCreateNewTask) => {
   const [ form ] = Form.useForm();
 
-  const handleSave = async () => {}
+  const handleSave = async () => {
+    const hasInvalidFields = await form.validateFields()
+      .then(() => false)
+      .catch((errors) => !!errors.errorFields.length);
+
+    if (hasInvalidFields) return;
+
+    const values = form.getFieldsValue();
+
+    try {
+      const id = generateRandomId(18);
+      await db.put({
+        _id: id,
+        title: values[formItems.taskTitle],
+        description: !values[formItems.taskDesc] ? '' : values[formItems.taskDesc],
+        estimatedPomodoros: !values[formItems.estimatedPomos] ? 0 : values[formItems.estimatedPomos],
+        donePomodoros: !values[formItems.donePomos] ? 0 : values[formItems.donePomos],
+        inProgress: !!values[formItems.inProgress],
+        created_at: new Date(),
+        updated_at: null,
+      });
+      notification.success({
+        message: 'Task created successfully!',
+        placement: 'topRight'
+      });
+      setOpen(false);
+    } catch (error) {
+      notification.error({
+        message: 'Task created successfully!',
+        placement: 'topRight'
+      });
+      console.log(error);
+    }
+  }
 
   return (
     <div
@@ -176,6 +221,12 @@ const CreateNewTask = ({open, setOpen}: TCreateNewTask) => {
         <Form.Item
           label="Task Title"
           name={formItems.taskTitle}
+          rules={[
+            {
+              required: true,
+              message: 'Define the task title.'
+            }
+          ]}
         >
           <Input
             placeholder="Boring title for this task"
@@ -209,15 +260,28 @@ const CreateNewTask = ({open, setOpen}: TCreateNewTask) => {
             className="w-full"
           />
         </Form.Item>
+        <Form.Item
+          label="In Progress?"
+          name={formItems.inProgress}
+        >
+          <Switch
+            className="w-full"
+            checkedChildren={
+              <p className="font-bold">YES, IN PROGRESS!</p>
+            }
+            unCheckedChildren={
+              <p className="font-bold">NO, NOT YET</p>
+            }
+          />
+        </Form.Item>
         <div className="flex justify-between mt-5 max-w-[100%]">
           <div></div>
-          <Button
-            htmlType="submit"
-            type="primary"
-            className="flex bg-blue-400"
+          <button
+            type="submit"
+            className={`flex ${theme?.includes('dark') ? 'text-white' : 'text-black'} ${dynamicButtonColors.primaryDynamicButtonColors(theme)} hover:opacity-70 transition-opacity font-bold p-2 rounded-xl`}
           >
             Create task
-          </Button>
+          </button>
           <div></div>
         </div>
       </Form>
