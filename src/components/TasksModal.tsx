@@ -1,9 +1,10 @@
 'use client';
 import { dynamicButtonColors } from "@/helpers";
 import { generateRandomId } from "@/services/database/db-helpers";
-import db from "@/services/database/pouchdb";
+import db, { ITask } from "@/services/database/pouchdb";
 import { CheckFat, PencilSimple, Trash, X } from "@phosphor-icons/react";
 import { Button, Collapse, Form, Input, InputNumber, Modal, Switch, notification } from "antd";
+import { useLiveQuery } from "dexie-react-hooks";
 import { useTheme } from "next-themes";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
@@ -12,29 +13,20 @@ interface ITasksModal {
   setOpenSettingsModal: (value: SetStateAction<boolean>) => void;
 }
 
-interface ITask {
-  _id: string;
-  title: string;
-  description: string;
-  estimatedPomodoros: number;
-  donePomodoros: number;
-  _rev: string;
-}
-
 export const TasksModal = ({
   openSettingsModal,
   setOpenSettingsModal
 }: ITasksModal) => {
   const [allTasks, setAllTasks] = useState<ITask[]>([]);
   const [openCreationTaskModal, setOpenCreationTaskModal] = useState<boolean>(false);
-  const [editTaskModalId, setEditTaskModalId] = useState<string | null>(null);
-  const [deleteTaskModalId, setDeleteTaskModalId] = useState<string | null>(null);
+  const [editTaskModalId, setEditTaskModalId] = useState<number | undefined | null>(null);
+  const [deleteTaskModalId, setDeleteTaskModalId] = useState<number | undefined | null>(null);
 
   const {
     theme
   } = useTheme();
 
-  const genExtra = (taskId: string) => (
+  const genExtra = (taskId: number | undefined) => (
     <div
       className="flex flex-row gap-7"
     >
@@ -57,7 +49,23 @@ export const TasksModal = ({
     </div>
   );
 
+  useLiveQuery(
+    async () => {
+      const tasks = await db.tasks.toArray();
+      console.log('Called Again: ', tasks);
+      if (tasks.length >= 1) {
+        tasks.sort((a: any, b: any) => {
+          return a.created_at - b.created_at;
+        });
+
+        setAllTasks(tasks);
+      }
+    },
+    [openCreationTaskModal, setOpenCreationTaskModal, editTaskModalId, setEditTaskModalId]
+  );
+
   useEffect(() => {
+    /*
     db.allDocs({ include_docs: true })
       .then(result => {
         const documents = result.rows.map(row => row.doc);
@@ -74,6 +82,9 @@ export const TasksModal = ({
       .catch(error => {
         console.error('Error fetching documents:', error);
       });
+      */
+
+
   }, [openCreationTaskModal, setOpenCreationTaskModal, editTaskModalId, setEditTaskModalId]);
 
   return (
@@ -126,9 +137,9 @@ export const TasksModal = ({
           {!openCreationTaskModal && (
             <Collapse items={allTasks.map((task) => {
               return {
-                key: task._id,
+                key: task.id,
                 label: task.title,
-                extra: genExtra(task._id),
+                extra: genExtra(task.id),
                 children: <div className="flex flex-col gap-2">
                   <div>
                     <h3
@@ -144,7 +155,14 @@ export const TasksModal = ({
                     >
                       Estimated Pomodoros:
                     </h3>
-                    <p>{task.donePomodoros} / {task.estimatedPomodoros}</p>
+                    <div className="flex">
+                      <p
+                        className="font-bold text-5xl"
+                      >
+                        {task.donePomodoros}
+                      </p>{" "}/{" "} 
+                      {task.estimatedPomodoros}
+                    </div>
                   </div>
                 </div>
               }
@@ -184,6 +202,7 @@ const CreateNewTask = ({open, setOpen, theme}: TCreateNewTask) => {
 
     try {
       const id = generateRandomId(18);
+      /*
       await db.put({
         _id: id,
         title: values[formItems.taskTitle],
@@ -194,6 +213,17 @@ const CreateNewTask = ({open, setOpen, theme}: TCreateNewTask) => {
         created_at: new Date(),
         updated_at: null,
       });
+      */
+      await db.tasks.add({
+        title: values[formItems.taskTitle],
+        description: !values[formItems.taskDesc] ? '' : values[formItems.taskDesc],
+        estimatedPomodoros: !values[formItems.estimatedPomos] ? 0 : values[formItems.estimatedPomos],
+        donePomodoros: !values[formItems.donePomos] ? 0 : values[formItems.donePomos],
+        inProgress: !!values[formItems.inProgress],
+        created_at: new Date(),
+        updated_at: null,
+      });
+
       notification.success({
         message: 'Task created successfully!',
         placement: 'topRight'
