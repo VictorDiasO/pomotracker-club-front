@@ -1,12 +1,12 @@
 'use client';
-import { dynamicButtonColors } from "@/helpers";
-import { generateRandomId } from "@/services/database/db-helpers";
+import { dynamicButtonColors, dynamicTextColors } from "@/helpers";
 import db, { ITask } from "@/services/database/pouchdb";
-import { CheckFat, PencilSimple, Trash, X } from "@phosphor-icons/react";
-import { Button, Collapse, Form, Input, InputNumber, Modal, Switch, notification } from "antd";
+import { CheckFat, Circle, X } from "@phosphor-icons/react";
+import { Button, Collapse, Form, Input, InputNumber, Modal, Spin, Switch, Tooltip, notification } from "antd";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useTheme } from "next-themes";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { LoadingOutlined } from '@ant-design/icons';
 
 interface ITasksModal {
   openSettingsModal: boolean;
@@ -19,40 +19,64 @@ export const TasksModal = ({
 }: ITasksModal) => {
   const [allTasks, setAllTasks] = useState<ITask[]>([]);
   const [openCreationTaskModal, setOpenCreationTaskModal] = useState<boolean>(false);
+  const [openDeleteTaskModal, setOpenDeleteTaskModal] = useState<null | number | undefined>(null);
   const [editTaskModalId, setEditTaskModalId] = useState<number | undefined | null>(null);
-  const [deleteTaskModalId, setDeleteTaskModalId] = useState<number | undefined | null>(null);
 
   const {
     theme
   } = useTheme();
 
-  const genExtra = (taskId: number | undefined) => (
+  const toggleTaskInProgress = (taskInfo: ITask) => {
+    if (taskInfo.id === undefined) return;
+
+    db.tasks.update(taskInfo.id, { inProgress: !taskInfo.inProgress })
+  }
+
+  const genExtra = (taskInfo: ITask) => (
+    // Im thinking about which options should be here... And I think that the maximum needs to be 2
+    // Maybe I can put just the "Mark as Done and Undone" functionality AND the functionality to put this task as the "actual" task.
+    // Our pomodoro make possible to the user to work and put "in progress" more than 1 task. We believe in maximum flexibility for our users.
+    // The "Edit" and "Delete" functionalities will be available only when the user open the task to see more details.
     <div
       className="flex flex-row gap-7"
     >
-      <CheckFat
-        size={24}
-        weight="fill"
-        color="green"
-        className="hover:opacity-60 transition-opacity"
-      />
-      <Trash
-        size={24}
-        color="red"
-        className="hover:opacity-60 transition-opacity"
-        onClick={(event) => {
-          event.stopPropagation();
-          console.log('Delete', taskId);
-          setDeleteTaskModalId(taskId);
-        }}
-      />
+      <Tooltip placement="top" title={"Mark as Done"}>
+        <CheckFat
+          size={24}
+          weight="fill"
+          color="green"
+          className="hover:opacity-60 transition-opacity"
+        />
+      </Tooltip>
+      <Tooltip placement="top" title={taskInfo.inProgress ? "In Progress..." : "Set as In Progress"}>
+        {taskInfo.inProgress
+          ? (
+            <Spin
+              indicator={
+                <LoadingOutlined
+                  onClick={() => toggleTaskInProgress(taskInfo)}
+                  style={{ fontSize: 24 }}
+                  spin
+                />
+              }
+            />
+          )
+          : (
+            <Circle
+              size={24}
+              weight="fill"
+              className="text-yellow-500 hover:opacity-60 transition-opacity"
+              onClick={() => toggleTaskInProgress(taskInfo)}
+            />
+          )
+        }
+      </Tooltip>
     </div>
   );
 
   useLiveQuery(
     async () => {
       const tasks = await db.tasks.toArray();
-      console.log('Called Again: ', tasks);
       if (tasks.length >= 1) {
         tasks.sort((a: any, b: any) => {
           return a.created_at - b.created_at;
@@ -61,31 +85,8 @@ export const TasksModal = ({
         setAllTasks(tasks);
       }
     },
-    [openCreationTaskModal, setOpenCreationTaskModal, editTaskModalId, setEditTaskModalId]
+    [openCreationTaskModal, setOpenCreationTaskModal, editTaskModalId, setEditTaskModalId, toggleTaskInProgress]
   );
-
-  useEffect(() => {
-    /*
-    db.allDocs({ include_docs: true })
-      .then(result => {
-        const documents = result.rows.map(row => row.doc);
-        if (documents.length >= 1) {
-          documents.sort((a: any, b: any) => {
-            return a.created_at - b.created_at;
-          });
-
-          setAllTasks(documents as ITask[]);
-        } else {
-          console.log('No tasks yet.');
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching documents:', error);
-      });
-      */
-
-
-  }, [openCreationTaskModal, setOpenCreationTaskModal, editTaskModalId, setEditTaskModalId]);
 
   return (
     <Modal
@@ -93,10 +94,6 @@ export const TasksModal = ({
       onCancel={() => setOpenSettingsModal(false)}
       okText='Save'
       className="-mt-[80px] md:-mt-0 lg:-mt-0"
-      maskStyle={{
-        backgroundColor: 'GrayText',
-        opacity: 0.5
-      }}
       closeIcon={(
         <X size={24} color={theme?.includes('light') ? '#000' : '#FFF'} />
       )}
@@ -109,16 +106,18 @@ export const TasksModal = ({
           </h2>
         </div>
         <div>
-          <div className="flex flex-row justify-between">
-            <div></div>
-            <button
-              className={`font-bold text-lg p-2 w-full mb-3 rounded-2xl ${dynamicButtonColors.primaryDynamicButtonColors(theme)} hover:opacity-70 transition-opacity`}
-              onClick={() => setOpenCreationTaskModal(!openCreationTaskModal)}
-            >
-              {openCreationTaskModal ? 'See Tasks (Go Back)' : '+ Add Task'}
-            </button>
-            <div></div>
-          </div>
+          {!openDeleteTaskModal && (
+            <div className="flex flex-row justify-between">
+              <div></div>
+              <button
+                className={`font-bold text-lg p-2 w-full mb-3 rounded-2xl ${dynamicButtonColors.primaryDynamicButtonColors(theme)} hover:opacity-70 transition-opacity`}
+                onClick={() => setOpenCreationTaskModal(!openCreationTaskModal)}
+              >
+                {openCreationTaskModal ? 'See Tasks (Go Back)' : '+ Add Task'}
+              </button>
+              <div></div>
+            </div>
+          )}
           {openCreationTaskModal && (
             <CreateNewTask
               open={openCreationTaskModal}
@@ -126,20 +125,20 @@ export const TasksModal = ({
               theme={theme}
             />
           )}
-          {deleteTaskModalId && (
+          {openDeleteTaskModal && (
             // It needs to be showing the delete confirmation modal
-            <CreateNewTask
-              open={openCreationTaskModal}
-              setOpen={setOpenCreationTaskModal}
+            <DeleteTaskModal
+              open={openDeleteTaskModal}
+              setOpen={setOpenDeleteTaskModal}
               theme={theme}
             />
           )}
-          {!openCreationTaskModal && (
+          {!openCreationTaskModal && !openDeleteTaskModal && (
             <Collapse items={allTasks.map((task) => {
               return {
                 key: task.id,
                 label: task.title,
-                extra: genExtra(task.id),
+                extra: genExtra(task),
                 children: <div className="flex flex-col gap-2">
                   <div>
                     <h3
@@ -163,6 +162,22 @@ export const TasksModal = ({
                       </p>{" "}/{" "} 
                       {task.estimatedPomodoros}
                     </div>
+                  </div>
+                  <div>
+                    <button
+                      className={`font-bold text-lg text-white p-2 w-full mb-1 rounded-2xl ${dynamicButtonColors.primaryDynamicButtonColors(theme)} hover:opacity-70 transition-opacity`}
+                      onClick={() => setOpenDeleteTaskModal(task.id)}
+                    >
+                      Save
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      className={`font-bold text-lg ${dynamicTextColors.primaryDynamicTextColors(theme)} p-2 w-full mb-3 rounded-2xl ${dynamicButtonColors.primaryDynamicButtonBorderColors(theme)} border border-x-2 border-y-2 hover:opacity-70 transition-opacity`}
+                      onClick={() => setOpenDeleteTaskModal(task.id)}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               }
@@ -201,19 +216,6 @@ const CreateNewTask = ({open, setOpen, theme}: TCreateNewTask) => {
     const values = form.getFieldsValue();
 
     try {
-      const id = generateRandomId(18);
-      /*
-      await db.put({
-        _id: id,
-        title: values[formItems.taskTitle],
-        description: !values[formItems.taskDesc] ? '' : values[formItems.taskDesc],
-        estimatedPomodoros: !values[formItems.estimatedPomos] ? 0 : values[formItems.estimatedPomos],
-        donePomodoros: !values[formItems.donePomos] ? 0 : values[formItems.donePomos],
-        inProgress: !!values[formItems.inProgress],
-        created_at: new Date(),
-        updated_at: null,
-      });
-      */
       await db.tasks.add({
         title: values[formItems.taskTitle],
         description: !values[formItems.taskDesc] ? '' : values[formItems.taskDesc],
@@ -231,7 +233,7 @@ const CreateNewTask = ({open, setOpen, theme}: TCreateNewTask) => {
       setOpen(false);
     } catch (error) {
       notification.error({
-        message: 'Task created successfully!',
+        message: 'Error while creating the task!',
         placement: 'topRight'
       });
       console.log(error);
@@ -388,6 +390,75 @@ const EditTask = ({open, setOpen, taskContent}: any) => {
           <div></div>
         </div>
       </Form>
+    </div>
+  );
+}
+
+type TDeleteTaskModal = {
+  open: number,
+  setOpen: Dispatch<SetStateAction<number | null | undefined>>,
+  theme: string | undefined,
+}
+
+const DeleteTaskModal = ({open, setOpen, theme}: TDeleteTaskModal) => {
+  const [taskData, setTaskData] = useState<ITask>();
+
+  const deleteTask = async () => {
+    try {
+      await db.tasks.delete(open);
+      notification.success({
+        message: 'Task deleted successfully!',
+        placement: 'topRight'
+      });
+      setOpen(null);
+    } catch (error) {
+      notification.error({
+        message: 'Error while deleting the task!',
+        placement: 'topRight'
+      });
+      console.log(error);
+    }
+  }
+
+  useLiveQuery(
+    async () => {
+      const tasks = await db.tasks.get(open);
+      setTaskData(tasks);
+    },
+    []
+  );
+
+  return (
+    <div
+      className="mt-6"
+    >
+      <h1
+        className="text-2xl flex text-center self-center"
+      >
+        Are you sure that you want to delete this task?
+      </h1>
+      <h1
+        className="text-xl ml-2 flex text-center self-center mt-1"
+      >
+        Task title: {taskData?.title}
+      </h1>
+
+      <div
+        className="flex gap-4 mt-4"
+      >
+        <button
+          className={`font-bold text-lg text-white p-2 w-full mb-3 rounded-2xl bg-slate-600 hover:opacity-70 transition-opacity`}
+          onClick={() => setOpen(null)}
+        >
+          Cancel
+        </button>
+        <button
+          className={`font-bold text-lg text-white p-2 w-full mb-3 rounded-2xl ${dynamicButtonColors.primaryDynamicButtonColors(theme)} hover:opacity-70 transition-opacity`}
+          onClick={() => deleteTask()}
+        >
+          Confirm
+        </button>
+      </div>
     </div>
   );
 }
