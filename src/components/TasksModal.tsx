@@ -20,7 +20,7 @@ export const TasksModal = ({
   const [allTasks, setAllTasks] = useState<ITask[]>([]);
   const [openCreationTaskModal, setOpenCreationTaskModal] = useState<boolean>(false);
   const [openDeleteTaskModal, setOpenDeleteTaskModal] = useState<null | number | undefined>(null);
-  const [editTaskModalId, setEditTaskModalId] = useState<number | undefined | null>(null);
+  const [openEditTaskModal, setOpenEditTaskModal] = useState<null | number>(null);
 
   const {
     theme
@@ -85,7 +85,7 @@ export const TasksModal = ({
         setAllTasks(tasks);
       }
     },
-    [openCreationTaskModal, setOpenCreationTaskModal, editTaskModalId, setEditTaskModalId, toggleTaskInProgress]
+    [openCreationTaskModal, setOpenCreationTaskModal, openEditTaskModal, setOpenEditTaskModal, toggleTaskInProgress]
   );
 
   return (
@@ -120,20 +120,27 @@ export const TasksModal = ({
           )}
           {openCreationTaskModal && (
             <CreateNewTask
-              open={openCreationTaskModal}
-              setOpen={setOpenCreationTaskModal}
+              isOpen={openCreationTaskModal}
+              setIsOpenState={setOpenCreationTaskModal}
+              theme={theme}
+            />
+          )}
+          {openEditTaskModal && (
+            <EditTask
+              openId={openEditTaskModal}
+              setIsOpenState={setOpenEditTaskModal}
               theme={theme}
             />
           )}
           {openDeleteTaskModal && (
             // It needs to be showing the delete confirmation modal
             <DeleteTaskModal
-              open={openDeleteTaskModal}
-              setOpen={setOpenDeleteTaskModal}
+              openId={openDeleteTaskModal}
+              setOpenState={setOpenDeleteTaskModal}
               theme={theme}
             />
           )}
-          {!openCreationTaskModal && !openDeleteTaskModal && (
+          {!openCreationTaskModal && !openDeleteTaskModal && !openEditTaskModal && (
             <Collapse items={allTasks.map((task) => {
               return {
                 key: task.id,
@@ -166,14 +173,14 @@ export const TasksModal = ({
                   <div>
                     <button
                       className={`font-bold text-lg text-white p-2 w-full mb-1 rounded-2xl ${dynamicButtonColors.primaryDynamicButtonColors(theme)} hover:opacity-70 transition-opacity`}
-                      onClick={() => setOpenDeleteTaskModal(task.id)}
+                      onClick={() => task.id && setOpenEditTaskModal(task.id)}
                     >
-                      Save
+                      {openEditTaskModal ? "Save" :  "Edit"}
                     </button>
                   </div>
                   <div>
                     <button
-                      className={`font-bold text-lg ${dynamicTextColors.primaryDynamicTextColors(theme)} p-2 w-full mb-3 rounded-2xl ${dynamicButtonColors.primaryDynamicButtonBorderColors(theme)} border border-x-2 border-y-2 hover:opacity-70 transition-opacity`}
+                      className={`font-bold text-lg ${dynamicTextColors.primaryDynamicTextColors(theme)} p-2 w-full mb-3 rounded-2xl bg-gray-300 hover:opacity-70 transition-opacity`}
                       onClick={() => setOpenDeleteTaskModal(task.id)}
                     >
                       Delete
@@ -198,12 +205,12 @@ const formItems = {
 }
 
 type TCreateNewTask = {
-  open: boolean,
-  setOpen: Dispatch<SetStateAction<boolean>>,
+  isOpen: boolean,
+  setIsOpenState: Dispatch<SetStateAction<boolean>>,
   theme: string | undefined,
 }
 
-const CreateNewTask = ({open, setOpen, theme}: TCreateNewTask) => {
+const CreateNewTask = ({isOpen, setIsOpenState, theme}: TCreateNewTask) => {
   const [ form ] = Form.useForm();
 
   const handleSave = async () => {
@@ -230,7 +237,7 @@ const CreateNewTask = ({open, setOpen, theme}: TCreateNewTask) => {
         message: 'Task created successfully!',
         placement: 'topRight'
       });
-      setOpen(false);
+      setIsOpenState(false);
     } catch (error) {
       notification.error({
         message: 'Error while creating the task!',
@@ -322,15 +329,33 @@ const CreateNewTask = ({open, setOpen, theme}: TCreateNewTask) => {
 }
 
 type TEditTask = {
-  open: boolean,
-  setOpen: Dispatch<SetStateAction<boolean>>,
-  taskContent: ITask
+  openId: number,
+  setIsOpenState: Dispatch<SetStateAction<number | null>>,
+  theme: string | undefined,
 }
 
-const EditTask = ({open, setOpen, taskContent}: any) => {
+const EditTask = ({openId, setIsOpenState, theme}: TEditTask) => {
   const [ form ] = Form.useForm();
+  const [taskData, setTaskData] = useState<ITask>();
+
 
   const handleSave = async () => {}
+
+  useLiveQuery(
+    async () => {
+      const taskById = await db.tasks.get(openId);
+      setTaskData(taskById);
+    },
+    []
+  );
+
+  form.setFieldsValue({
+    [formItems.taskTitle]: taskData?.title,
+    [formItems.taskDesc]: taskData?.description,
+    [formItems.estimatedPomos]: taskData?.estimatedPomodoros,
+    [formItems.donePomos]: taskData?.donePomodoros,
+    [formItems.inProgress]: taskData?.inProgress,
+  });
 
   return (
     <div
@@ -395,22 +420,22 @@ const EditTask = ({open, setOpen, taskContent}: any) => {
 }
 
 type TDeleteTaskModal = {
-  open: number,
-  setOpen: Dispatch<SetStateAction<number | null | undefined>>,
+  openId: number,
+  setOpenState: Dispatch<SetStateAction<number | null | undefined>>,
   theme: string | undefined,
 }
 
-const DeleteTaskModal = ({open, setOpen, theme}: TDeleteTaskModal) => {
+const DeleteTaskModal = ({openId, setOpenState, theme}: TDeleteTaskModal) => {
   const [taskData, setTaskData] = useState<ITask>();
 
   const deleteTask = async () => {
     try {
-      await db.tasks.delete(open);
+      await db.tasks.delete(openId);
       notification.success({
         message: 'Task deleted successfully!',
         placement: 'topRight'
       });
-      setOpen(null);
+      setOpenState(null);
     } catch (error) {
       notification.error({
         message: 'Error while deleting the task!',
@@ -422,8 +447,8 @@ const DeleteTaskModal = ({open, setOpen, theme}: TDeleteTaskModal) => {
 
   useLiveQuery(
     async () => {
-      const tasks = await db.tasks.get(open);
-      setTaskData(tasks);
+      const taskById = await db.tasks.get(openId);
+      setTaskData(taskById);
     },
     []
   );
@@ -447,8 +472,8 @@ const DeleteTaskModal = ({open, setOpen, theme}: TDeleteTaskModal) => {
         className="flex gap-4 mt-4"
       >
         <button
-          className={`font-bold text-lg text-white p-2 w-full mb-3 rounded-2xl bg-slate-600 hover:opacity-70 transition-opacity`}
-          onClick={() => setOpen(null)}
+          className={`font-bold text-lg text-black p-2 w-full mb-3 rounded-2xl bg-gray-300 hover:opacity-70 transition-opacity`}
+          onClick={() => setOpenState(null)}
         >
           Cancel
         </button>

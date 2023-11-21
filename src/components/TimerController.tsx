@@ -1,12 +1,13 @@
 "use client";
 import { SetStateAction, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { ArrowCounterClockwise, CaretDoubleRight, ChartBar, CheckFat, DotsThreeOutline, GearSix, Icon, Pause, Play } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, CaretDoubleRight, ChartBar, CheckFat, Copyright, DotsThreeOutline, GearSix, Icon, Pause, Play } from "@phosphor-icons/react";
 import { useTimerContext } from "@/contexts";
 import { dynamicButtonColors, dynamicIconColors } from "@/helpers";
 import { SettingsModal } from "./SettingsModal";
 import { Popover } from "antd";
 import { TasksModal } from "./TasksModal";
+import { CreditsModal } from "./CreditsModal";
 
 export const TimerController = () => {
   const {
@@ -24,6 +25,7 @@ export const TimerController = () => {
   const [ showMenuPopover, setShowMenuPopover ] = useState(false);
   const [ openSettingsModal, setOpenSettingsModal ] = useState(false);
   const [ openTasksModal, setOpenTasksModal ] = useState(false);
+  const [ openCreditsModal, setOpenCreditsModal ] = useState(false);
 
   const contentItem = (title: string, key: string, Icon: Icon, modalToOpen: boolean, setModalToOpen: (value: SetStateAction<boolean>) => void) => (
     <button
@@ -50,6 +52,7 @@ export const TimerController = () => {
       {contentItem('Statistics', 'S', ChartBar, false, () => {})}
       {contentItem('Preferences', 'P', GearSix, openSettingsModal, setOpenSettingsModal)}
       {contentItem('Manage Tasks', 'M', CheckFat, openTasksModal, setOpenTasksModal)}
+      {contentItem('Credits', 'C', Copyright, openCreditsModal, setOpenCreditsModal)}
     </div>
   );
 
@@ -64,6 +67,11 @@ export const TimerController = () => {
         e.preventDefault()
         setShowMenuPopover(false)
         setOpenTasksModal(!openTasksModal)
+      }
+      if (e.ctrlKey && e.key === 'c') {
+        e.preventDefault()
+        setShowMenuPopover(false)
+        setOpenCreditsModal(!openCreditsModal)
       }
     };
 
@@ -97,6 +105,12 @@ export const TimerController = () => {
         <TasksModal
           openSettingsModal={openTasksModal}
           setOpenSettingsModal={setOpenTasksModal}
+        />
+      )}
+      {openCreditsModal && (
+        <CreditsModal
+          openCreditsModal={openCreditsModal}
+          setOpenCreditsModal={setOpenCreditsModal}
         />
       )}
       { ticking
